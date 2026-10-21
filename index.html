@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>GlobMP: Continuous-Time Constrained Motion Planning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: T-Rex article layout. Full-screen hero video, then a sticky contents list on the left of one 965px reading column; cream "day" theme with gold accents. Single deliberate light theme. */
@@ -251,7 +252,7 @@ h3+.lead{margin-top:6px}
 .anim .pop{transform-box:fill-box;transform-origin:center;transform:scale(0)}
 .anim.in .pop{transform:none;transition:transform .55s cubic-bezier(.34,1.56,.64,1);transition-delay:var(--d,0s)}
 #sr-ts text{font-family:var(--serif)}
-.logos .logo-ra{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:24px;letter-spacing:.03em;color:#1428a0;line-height:26px;white-space:nowrap}
+.logos .logo-ra{font-family:'Roboto Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:32px;letter-spacing:.005em;color:#1428a0;line-height:26px;white-space:nowrap}
 .title-block .logos{gap:12px}
 .soon{margin:28px 0 0;padding:34px 20px;border:1.5px dashed var(--line-strong);border-radius:12px;text-align:center;font-size:18px;color:var(--muted);background:#ffffff8c}
 </style>
@@ -296,7 +297,7 @@ h3+.lead{margin-top:6px}
 
 <h2 id="method">Method</h2>
     <p class="lead">Planning and steering as one continuous-time program</p>
-    <p>GlobMP represents each motion as a piecewise polynomial, so every constraint, whether an obstacle, a separation between robots, or closeness to a learned policy's proposal, becomes a polynomial that must <b>stay nonnegative over the whole motion</b>, not only at sampled times. A <b>gradient projection</b> method alternates a step that lowers the smoothness cost with a restoration step that makes the curve feasible again. <b>Every iterate stays feasible</b>, and under mild assumptions the <b>cost approaches the global optimum</b> as the number of pieces grows.</p>
+    <p>GlobMP represents each motion as a piecewise polynomial, so every constraint, whether an obstacle, a separation between robots, or closeness to a learned policy's proposal, becomes a polynomial that must stay nonnegative over the whole motion, not only at sampled times. A gradient projection method alternates a step that lowers the smoothness cost with a restoration step that makes the curve feasible again. Every iterate stays feasible, and under mild assumptions the cost approaches the <b>global optimum</b> as the number of pieces grows.</p>
     <figure><div class="steps2"><img class="fig-img" src="project_page/figs/bernstein_hull.gif" width="960" height="720" loading="lazy" alt="Animation: a cubic Bezier curve with four control points and its shaded convex hull; the middle control points move and the curve follows, turning red where it enters a circular obstacle."><img class="fig-img" src="project_page/figs/cost_step.gif" width="650" height="345" loading="lazy" alt="A cost step alone: a curve with fixed endpoints arcs above a circular obstacle; gradient steps on the smoothness cost move only the free control points, the curve flattens and the cost falls, and after about a dozen steps the smoother curve dips into the obstacle (red), so restoration is needed."><img class="fig-img" src="project_page/figs/restoration_left.gif" width="710" height="462" loading="lazy" alt="Restoration: the free control points move a curve that passes through a circular obstacle up and out of it, until it is feasible at every instant."></div>
    <figcaption><b>Left:</b> a polynomial curve is set by its control points and stays inside their convex hull; fixing the degree does not discretize time. <b>Middle, cost step:</b> only the free control points move, so the start and goal never change; the curve gets smoother but can enter an obstacle. <b>Right, restoration:</b> the free control points move the curve back out until every constraint holds at every instant. GlobMP alternates the two.</figcaption></figure>
 

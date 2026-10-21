@@ -317,7 +317,7 @@ h3+.lead{margin-top:6px}
 <div class="card pipe-card"><svg id="pipe-svg" viewBox="0 0 1200 470" role="img" aria-label="Animated pipeline on the handover task: the meta-reasoner reads the head and left-wrist images once and sets the keep-out, keep-in and grip blocks for the tissue box; then, chunk after chunk, the expert policy proposes rho, GlobMP bends it into gamma around an obstacle inside a tube around rho, the robot tracks gamma at 30 Hz, and measured events (stall, touch, grasp force) feed back."></svg></div>
 <figcaption>Steered motion planning, illustrated on the handover task: the meta-reasoner sets keep-out, keep-in and grip blocks once; then, for every chunk, the policy proposes <span class="math">ρ</span> (grey, red where it would collide), GlobMP returns a smooth, collision-free curve <span class="math">γ</span> close to it, and the robot executes it at 30&nbsp;Hz. Measured events (stall, touch, grasp force) switch blocks and <span class="math">ρ</span> with no further call. Schematic.</figcaption>
 </figure>
-<!-- NOTE: in the XHand recordings the wrist-camera files are swapped (left_wrist shows the right hand). The wrist labels burned into teleop_*.mp4 and the "left wrist" thumbnail in the pipeline animation account for this; see teleop_composite2.py before re-rendering. -->
+<!-- NOTE: in the XHand recordings the wrist-camera files are swapped (left_wrist shows the right hand). The wrist labels burned into teleop_*.mp4 and the "left wrist" thumbnail in the pipeline animation account for this; see teleop_composite.py before re-rendering. -->
 <div class="pills" id="tel-pills"><button class="pill" type="button" data-k="bag" aria-pressed="true">Bag into box</button><button class="pill" type="button" data-k="handover" aria-pressed="false">Tissue-box handover</button><button class="pill" type="button" data-k="tissue" aria-pressed="false">Pull a tissue</button><button class="pill" type="button" data-k="cup" aria-pressed="false">Full-cup pick</button></div>
 <div class="player"><video id="tel-video" src="project_page/videos/teleop_bag.mp4" poster="project_page/posters/teleop_bag.jpg" controls autoplay muted loop playsinline preload="auto" aria-label="Teleoperation episode: head camera, both wrist cameras, the ten fingertip pressure maps, and the fingertip force of each hand over time"></video></div>
 <figure><div class="card anim"><div class="keyrow" id="steer-key"></div><svg id="steer" viewBox="0 0 900 290" role="img" aria-label="Real-robot success per task for GR00T N1.7 and pi0.5 in four conditions"></svg></div>
@@ -539,7 +539,7 @@ function txt(p,x,y,s,a){var t=el('text',Object.assign({x:x,y:y},a||{}),p);t.text
 function tip(g,s){var t=el('title',{},g);t.textContent=s}
 
 
-var COND=[['policy','#d3cdc0'],['policy + touch','#948c7e'],['steered','#f2c66d'],['touch + steered','#b9770c']];
+var COND=[['policy','#c5ccd6'],['policy + touch','#6e7c8e'],['steered','#f0a64a'],['touch + steered','#c4570f']];
 var TK=['Tissue','Handover','Toy','Mug'];
 var RES={'GR00T N1.7':[[[1,10],[5,10],[0,10],[5,10]],[null,[3,10],[0,10],[9,10]],[[5,10],[10,10],[5,10],[9,10]],[[6,10],[10,10],[7,10],[9,10]]],
          'π0.5':[[[2,10],[10,10],[0,10],[7,10]],[null,[6,10],[0,9],[8,10]],[[5,10],[10,10],[5,10],[8,10]],[[6,10],[10,10],[7,10],[8,10]]]};

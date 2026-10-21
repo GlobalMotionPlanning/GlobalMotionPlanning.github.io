@@ -252,6 +252,11 @@ h3+.lead{margin-top:6px}
 .anim .pop{transform-box:fill-box;transform-origin:center;transform:scale(0)}
 .anim.in .pop{transform:none;transition:transform .55s cubic-bezier(.34,1.56,.64,1);transition-delay:var(--d,0s)}
 #sr-ts text{font-family:var(--serif)}
+#mz-db text{font-family:var(--serif)}
+.anim .slide{transform:none}
+.anim.in .slide{transform:translateX(var(--dx));transition:transform 1.1s cubic-bezier(.45,0,.2,1);transition-delay:var(--d,0s)}
+.anim .grow{stroke-dashoffset:1}
+.anim.in .grow{stroke-dashoffset:0;transition:stroke-dashoffset 1.1s cubic-bezier(.45,0,.2,1);transition-delay:var(--d,0s)}
 .logos .logo-ra{font-family:'Roboto Condensed','Arial Narrow',Arial,sans-serif;font-weight:700;font-size:32px;letter-spacing:.005em;color:#1428a0;line-height:26px;white-space:nowrap}
 .title-block .logos{gap:12px}
 .soon{margin:28px 0 0;padding:34px 20px;border:1.5px dashed var(--line-strong);border-radius:12px;text-align:center;font-size:18px;color:var(--muted);background:#ffffff8c}
@@ -360,6 +365,8 @@ h3+.lead{margin-top:6px}
     <p>A point robot crosses a nonconvex maze while avoiding keep-out regions. GlobMP picks a corridor by breadth-first search and enforces the keep-outs in continuous time; GlobMP is deterministic, the ten baselines run 10 episodes each.</p>
     <figure style="max-width:900px"><video src="project_page/videos/maze2d_broad.mp4" poster="project_page/posters/maze2d_broad.jpg" autoplay muted loop playsinline controls preload="auto" style="width:100%;border-radius:12px;background:transparent"></video><figcaption>Broad setting. Dark stretches marked &times; are inside a keep-out; the badge counts runs that entered one.</figcaption></figure>
     <figure style="max-width:900px"><video src="project_page/videos/maze2d_narrow.mp4" poster="project_page/posters/maze2d_narrow.jpg" autoplay muted loop playsinline controls preload="auto" style="width:100%;border-radius:12px;background:transparent"></video><figcaption>Narrow setting, with six keep-outs.</figcaption></figure>
+
+    <figure style="max-width:760px;margin-left:auto;margin-right:auto"><div class="card anim" id="mz-db-card"><svg id="mz-db" viewBox="0 0 760 470" role="img" aria-label="Keep-out violations per run, Broad to Narrow, with success rate. GlobMP 0 to 0, success 1.0 and 1.0; DiRecT 0 to 0, 1.0 and 1.0; Gradient Guidance 13.0 to 21.7, 0.2 and 0.1; Classifier Guidance 27.8 to 64.4, 0.1 and 0.0; Projected Diffusion 38.5 to 83.2, 0.4 and 0.1; Diffuser 44.6 to 94.1, 0.0 and 0.0; Primal-Dual 30.6 to 125.9, 0.0 and 0.0; Augmented Lagrangian 9.6 to 222.2, 0.5 and 0.0; SafeDiffuser-ReS 9.8 to 223.8, 0.4 and 0.1; SafeDiffuser-RoS 59.9 to 258.2, 0.0 and 0.0; SafeDiffuser-TVS 42.4 to 266.3, 0.4 and 0.0."></svg></div><figcaption>What narrowing the maze does to each method: keep-out violations per executed run go from the Broad setting (open circle) to Narrow (filled), and success rate is shown on the right. Means over 10 episodes; GlobMP is deterministic. Only DiRecT and GlobMP stay at zero in both.</figcaption></figure>
 
 <h2 id="code">Quick Start</h2>
     <p class="lead">Code on GitHub and Hugging Face</p>
@@ -606,6 +613,44 @@ P.forEach(function(p,i){var x=X(p[1]),y=Y(p[2]),ours=p[0][0]=='G'&&p[0].indexOf(
  txt(g,x+p[3],y+p[4],p[0],{'text-anchor':p[5],'font-size':ours?15:13,'font-weight':ours?700:400,fill:ours?'#b9770c':'#1a1714d9',class:'fade',style:'--d:'+(d+0.25)+'s'});
  var t=el('title',{},g);t.textContent=p[0]+': task success '+p[1].toFixed(2)+', safety rate '+p[2].toFixed(2)});
 var box=document.getElementById('sr-ts-card');
+if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){var c=e.target.classList;if(e.isIntersecting){if(!c.contains('in')){void e.target.offsetWidth;c.add('in')}}else if(e.intersectionRatio===0){c.remove('in')}})},{threshold:[0,.3]}).observe(box)}else box.classList.add('in');})();
+</script>
+<script>
+(function(){var NS='http://www.w3.org/2000/svg';
+function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function txt(p,x,y,s,a){var t=el('text',Object.assign({x:x,y:y},a||{}),p);t.textContent=s;return t}
+var svg=document.getElementById('mz-db');if(!svg)return;
+// executed-run violations and success rate, Broad then Narrow (tab:maze2d, tab:maze2d-narrow; GlobMP = exact e=4)
+var M=[['GlobMP (ours)',0,0,1,1],['DiRecT',0,0,1,1],['Gradient Guidance',13.0,21.7,.2,.1],['Classifier Guidance',27.8,64.4,.1,0],
+ ['Projected Diffusion',38.5,83.2,.4,.1],['Diffuser',44.6,94.1,0,0],['Primal–Dual',30.6,125.9,0,0],['Augmented Lagrangian',9.6,222.2,.5,0],
+ ['SafeDiffuser-ReS',9.8,223.8,.4,.1],['SafeDiffuser-RoS',59.9,258.2,0,0],['SafeDiffuser-TVS',42.4,266.3,.4,0]];
+var L=178,R0=560,T=62,RH=34,VM=280;function X(v){return L+(R0-L)*Math.sqrt(v/VM)}
+var B=T+RH*M.length-RH/2+8;
+el('rect',{x:L-14,y:T-RH/2-6,width:28,height:B-T+RH/2+6,rx:8,fill:'#f2c66d','fill-opacity':.22,class:'fade',style:'--d:.1s'},svg);
+txt(svg,L+18,T-RH/2-14,'never enters a keep-out',{'font-size':12,'font-style':'italic',fill:'#8a5a12',class:'fade',style:'--d:.3s'});
+[0,10,50,100,200].forEach(function(v){el('line',{x1:X(v),x2:X(v),y1:T-RH/2,y2:B,stroke:'#1a171414'},svg);txt(svg,X(v),B+18,String(v),{'text-anchor':'middle','font-size':12,fill:'#1a171499'})});
+txt(svg,(L+R0)/2,B+40,'keep-out violations per run (square-root scale)',{'text-anchor':'middle','font-size':14,fill:'#1a1714cc'});
+txt(svg,650,T-RH/2-14,'success rate',{'text-anchor':'middle','font-size':13,fill:'#1a1714cc'});
+txt(svg,612,B+18,'Broad',{'text-anchor':'middle','font-size':12,fill:'#1a171499'});txt(svg,688,B+18,'Narrow',{'text-anchor':'middle','font-size':12,fill:'#1a171499'});
+// legend
+el('circle',{cx:L+120,cy:12,r:6,fill:'#fff',stroke:'#8d8679','stroke-width':2.4},svg);txt(svg,L+132,16,'Broad',{'font-size':13,fill:'#1a1714d9'});
+el('line',{x1:L+180,x2:L+210,y1:12,y2:12,stroke:'#8d8679','stroke-width':2},svg);el('path',{d:'M'+(L+210)+' 7 l7 5 l-7 5z',fill:'#8d8679'},svg);
+el('circle',{cx:L+230,cy:12,r:6,fill:'#5d5750'},svg);txt(svg,L+242,16,'Narrow (six keep-outs)',{'font-size':13,fill:'#1a1714d9'});
+function sr(g,cx,y,v,ours,d){var w=56;el('rect',{x:cx-w/2,y:y-5,width:w,height:10,rx:5,fill:'#1a171412'},g);
+ if(v>0)el('rect',{x:cx-w/2,y:y-5,width:w*v,height:10,rx:5,fill:ours?'#b9770c':'#8d8679',class:'fade',style:'--d:'+d+'s'},g);
+ txt(g,cx+w/2+4,y+4,v.toFixed(1),{'font-size':11,fill:ours?'#b9770c':'#1a171499','font-weight':ours?700:400})}
+M.forEach(function(m,i){var y=T+i*RH,ours=i==0,d=0.4+i*0.08,g=el('g',{},svg),xb=X(m[1]),xn=X(m[2]);
+ if(i%2==1)el('rect',{x:8,y:y-RH/2,width:744,height:RH,fill:'#1a171406'},g);
+ txt(g,L-24,y+5,m[0],{'text-anchor':'end','font-size':ours?15:13,'font-weight':ours?700:400,fill:ours?'#b9770c':'#1a1714d9'});
+ if(xn-xb>4){el('line',{x1:xb,x2:xn-8,y1:y,y2:y,stroke:'#8d8679','stroke-width':2,pathLength:1,'stroke-dasharray':1,class:'grow',style:'--d:'+(d+0.3)+'s'},g)}
+ el('circle',{cx:xb,cy:y,r:6,fill:'#fff',stroke:ours?'#b9770c':'#8d8679','stroke-width':2.4,class:'pop',style:'--d:'+d+'s'},g);
+ var s=el('g',{class:'slide',style:'--dx:'+(xn-xb).toFixed(1)+'px;--d:'+(d+0.3)+'s'},g);
+ if(ours)el('circle',{cx:xb,cy:y,r:13,fill:'#f2c66d','fill-opacity':.45},s);
+ el('circle',{cx:xb,cy:y,r:ours?7.5:6,fill:ours?'#b9770c':'#5d5750'},s);
+ if(m[2]>0)txt(g,xn+12,y+4,m[2].toFixed(0),{'font-size':11,fill:'#1a171499',class:'fade',style:'--d:'+(d+1.3)+'s'});
+ sr(g,612,y,m[3],ours,d+0.2);sr(g,688,y,m[4],ours,d+0.4);
+ var t=el('title',{},g);t.textContent=m[0]+': violations '+m[1]+' (Broad) to '+m[2]+' (Narrow); success '+m[3].toFixed(1)+' to '+m[4].toFixed(1)});
+var box=document.getElementById('mz-db-card');
 if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){var c=e.target.classList;if(e.isIntersecting){if(!c.contains('in')){void e.target.offsetWidth;c.add('in')}}else if(e.intersectionRatio===0){c.remove('in')}})},{threshold:[0,.3]}).observe(box)}else box.classList.add('in');})();
 </script>
 </body>

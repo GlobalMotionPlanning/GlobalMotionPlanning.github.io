@@ -251,6 +251,8 @@ h3+.lead{margin-top:6px}
 .anim .pop{transform-box:fill-box;transform-origin:center;transform:scale(0)}
 .anim.in .pop{transform:none;transition:transform .55s cubic-bezier(.34,1.56,.64,1);transition-delay:var(--d,0s)}
 #sr-ts text{font-family:var(--serif)}
+.logos .logo-ra{font-family:Arial,Helvetica,sans-serif;font-weight:700;font-size:24px;letter-spacing:.03em;color:#1428a0;line-height:26px;white-space:nowrap}
+.title-block .logos{gap:12px}
 .soon{margin:28px 0 0;padding:34px 20px;border:1.5px dashed var(--line-strong);border-radius:12px;text-align:center;font-size:18px;color:var(--muted);background:#ffffff8c}
 </style>
 </head>
@@ -273,6 +275,7 @@ h3+.lead{margin-top:6px}
     <a class="sub" href="#maze">Maze2D</a>
     <a href="#code">Quick Start</a>
     <a href="#citation">Citation</a>
+    <a href="#acknowledgements">Acknowledgements</a>
   </nav>
 
   <main class="shell">
@@ -286,7 +289,7 @@ h3+.lead{margin-top:6px}
        <a class="link" href="https://github.com/GlobalMotionPlanning/GlobMP" target="_blank" rel="noopener">Code (GitHub)</a>
        <a class="link" href="https://huggingface.co/GlobalMotionPlanning/GlobMP" target="_blank" rel="noopener">Code and data (Hugging Face)</a>
      </div>
-     <div class="logos"><img src="project_page/figs/samsung_sds_logo_blue.png" width="1280" height="161" alt="Samsung SDS"></div>
+     <div class="logos"><img src="project_page/figs/samsung_sds_logo_blue.png" width="1280" height="161" alt="Samsung SDS"><span class="logo-ra">RESEARCH AMERICA</span></div>
        <img class="teaser" src="project_page/figs/teaser_steering.gif" width="1080" height="900" alt="Animation of steering in a receding-horizon loop: at each chunk a policy proposes its next motion (grey, dashed), red where it would hit an obstacle; GlobMP returns the closest smooth motion inside a tube around the proposal that clears every obstacle, the robot drives it, and the next chunk is proposed from there.">
      </div>
    </header>
@@ -373,6 +376,9 @@ python -m pytest globmp/tests    # about 10 s on one CPU core</code></pre>
   year    = {2026},
   note    = {Equal contribution: Amiri, Didari, Ataee Tarzanagh}
 }</pre></div>
+
+   <h2 id="acknowledgements">Acknowledgements</h2>
+   <p>The multi-robot hardware experiments were run on the Robotarium, the remotely accessible swarm-robotics testbed at the Georgia Institute of Technology. We thank the Robotarium team for access to the testbed: S. Wilson, P. Glotfelter, L. Wang, S. Mayya, G. Notomista, M. Mote and M. Egerstedt, &ldquo;The Robotarium: Globally impactful opportunities, challenges, and lessons learned in remote-access, distributed control of multirobot systems,&rdquo; <i>IEEE Control Systems Magazine</i>, 40(1):26&ndash;44, 2020.</p>
 
    <p class="foot">GlobMP &middot; Samsung SDS Research America</p>
   </main>

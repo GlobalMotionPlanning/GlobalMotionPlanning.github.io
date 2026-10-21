@@ -333,7 +333,6 @@ h3+.lead{margin-top:6px}
 <h3 id="avoidance">Obstacle avoidance</h3>
     <p class="lead">Collision-free motion in end-effector space (D3IL avoiding-v0)</p>
     <p>A planar end-effector must reach the goal while avoiding pillars. GlobMP is the projection step of DiRecT's diffusion sampler, compared with ten diffusion planners over 100 rollouts each.</p>
-    <figure style="max-width:760px"><video src="project_page/videos/avoiding_rollouts.mp4" poster="project_page/posters/avoiding_rollouts.jpg" autoplay muted loop playsinline controls preload="auto" style="width:100%;border-radius:12px;background:transparent"></video><figcaption>GlobMP rollouts on avoiding-v0 (seed 0, 100 episodes: 95 safe, 98 reach the goal), replayed in the simulator. Blue: test-time constraints. The robot runs four rollouts, then all 100 paths appear, safe in navy and violating in red.</figcaption></figure>
     <figure style="max-width:1100px">
       <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px">
         <figure style="margin:0"><video src="project_page/videos/avoiding_classifier_guidance.mp4" autoplay muted loop playsinline preload="metadata" style="width:100%;display:block;border-radius:8px;background:#fff"></video><figcaption style="font-size:12px;margin-top:4px;text-align:center">Classifier Guidance</figcaption></figure>

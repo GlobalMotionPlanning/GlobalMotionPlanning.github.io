@@ -279,6 +279,8 @@ h3+.lead{margin-top:6px}
     <a class="sub" href="#steering">Steering</a>
     <a class="sub" href="#avoidance">Obstacle avoidance</a>
     <a class="sub" href="#maze">Maze2D</a>
+    <a href="#dataset">Dataset</a>
+    <a class="sub" href="#dataset-explore">Explore the dataset</a>
     <a href="#code">Quick Start</a>
     <a href="#citation">Citation</a>
     <a href="#acknowledgements">Acknowledgements</a>
@@ -367,6 +369,27 @@ h3+.lead{margin-top:6px}
     <figure style="max-width:900px"><video src="project_page/videos/maze2d_narrow.mp4" poster="project_page/posters/maze2d_narrow.jpg" autoplay muted loop playsinline controls preload="auto" style="width:100%;border-radius:12px;background:transparent"></video><figcaption>Narrow setting, with six keep-outs.</figcaption></figure>
 
     <figure style="max-width:760px;margin-left:auto;margin-right:auto"><div class="card anim" id="mz-db-card"><svg id="mz-db" viewBox="0 0 760 470" role="img" aria-label="Keep-out violations per run, Broad to Narrow, with success rate. GlobMP 0 to 0, success 1.0 and 1.0; DiRecT 0 to 0, 1.0 and 1.0; Gradient Guidance 13.0 to 21.7, 0.2 and 0.1; Classifier Guidance 27.8 to 64.4, 0.1 and 0.0; Projected Diffusion 38.5 to 83.2, 0.4 and 0.1; Diffuser 44.6 to 94.1, 0.0 and 0.0; Primal-Dual 30.6 to 125.9, 0.0 and 0.0; Augmented Lagrangian 9.6 to 222.2, 0.5 and 0.0; SafeDiffuser-ReS 9.8 to 223.8, 0.4 and 0.1; SafeDiffuser-RoS 59.9 to 258.2, 0.0 and 0.0; SafeDiffuser-TVS 42.4 to 266.3, 0.4 and 0.0."></svg></div><figcaption>What narrowing the maze does to each method: keep-out violations per executed run go from the Broad setting (open circle) to Narrow (filled), and success rate is shown on the right. Means over 10 episodes; GlobMP is deterministic. Only DiRecT and GlobMP stay at zero in both.</figcaption></figure>
+
+<h2 id="dataset">Dataset</h2>
+    <p class="lead">Teleoperated demonstrations with fingertip touch</p>
+    <p>The expert policies we steer are trained on teleoperated demonstrations collected on a bimanual Dexmate Vega-1 with two 7-DoF arms and two 12-DoF XHAND1 dexterous hands with fingertip tactile sensing. Perception combines a head ZED X Mini stereo camera with two wrist cameras; teleoperation uses Manus gloves for the fingers and HTC VIVE trackers for the wrists. Each episode records, at 30&nbsp;Hz, three RGB streams, both arms and hands (measured and commanded), wrist and end-effector poses, and per-fingertip touch: a 3-axis force, a 120-taxel array and the sensor temperature for all ten fingertips.</p>
+    <div class="stats">
+      <div class="stat"><b>2.6h</b><span>Teleoperated Demonstrations</span></div>
+      <div class="stat"><b>542</b><span>Successful Episodes</span></div>
+      <div class="stat"><b>12</b><span>Manipulation Tasks, 6 recorded so far</span></div>
+      <div class="stat"><b>3</b><span>Tactile Modalities</span></div>
+    </div>
+    <figure>
+      <div class="charts">
+        <div class="card anim" id="ds-pie-card"><div class="pie-wrap"><svg id="ds-pie" viewBox="0 0 260 260" role="img" aria-label="Share of demonstration time per task category"></svg><div class="legend" id="ds-pie-legend"></div></div></div>
+        <div class="card anim" id="ds-min-card"><svg id="ds-min" viewBox="0 0 520 300" role="img" aria-label="Minutes of demonstrations per task"></svg></div>
+        <div class="card full anim" id="ds-ses-card"><svg id="ds-ses" viewBox="0 0 960 250" role="img" aria-label="Successful episodes per recording session, grouped by task category"></svg></div>
+      </div>
+      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Bottom: successful episodes in each recording session, grouped by category. Only demonstrations with randomized object positions are counted, recorded September 28 to October 19, 2026, successful takes only; the mug-into-backpack statistics will be added, and we will update these numbers as collection continues.</figcaption>
+    </figure>
+    <h3 id="dataset-explore">Explore the dataset</h3>
+    <p>The twelve tasks of the dataset, each named by its motion and object, all recorded with randomized object positions. Recorded tasks play one episode from the head camera at real speed; the others are still being collected.</p>
+    <div class="wall" id="wall" aria-label="Recorded episodes, one per task"></div>
 
 <h2 id="code">Quick Start</h2>
     <p class="lead">Code on GitHub and Hugging Face</p>
@@ -652,6 +675,57 @@ M.forEach(function(m,i){var y=T+i*RH,ours=i==0,d=0.4+i*0.08,g=el('g',{},svg),xb=
  var t=el('title',{},g);t.textContent=m[0]+': violations '+m[1]+' (Broad) to '+m[2]+' (Narrow); success '+m[3].toFixed(1)+' to '+m[4].toFixed(1)});
 var box=document.getElementById('mz-db-card');
 if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){var c=e.target.classList;if(e.isIntersecting){if(!c.contains('in')){void e.target.offsetWidth;c.add('in')}}else if(e.intersectionRatio===0){c.remove('in')}})},{threshold:[0,.3]}).observe(box)}else box.classList.add('in');})();
+</script>
+<script>
+(function(){var NS='http://www.w3.org/2000/svg';
+function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function txt(p,x,y,s,a){var t=el('text',Object.assign({x:x,y:y},a||{}),p);t.textContent=s;return t}
+function tip(g,s){var t=el('title',{},g);t.textContent=s}
+if(!document.getElementById('ds-pie'))return;
+// randomized-position recordings; mug into backpack not yet counted
+var CAT={insert:['Grasp, lift & insert','#b9770c'],handover:['Handover','#f2c66d'],extract:['Extract','#8d8679'],lift:['Grasp & lift','#d3cdc0']};
+var TASKS=[['Grasp, lift, insert / toy','insert',108,33.0],['Grasp, lift, insert / bag','insert',128,50.4],['Handover / box','handover',104,33.1],['Extract / tissue','extract',102,18.3],['Grasp & lift / cup','lift',100,21.7]];
+(function(){var svg=document.getElementById('ds-pie'),tot=0,by={};TASKS.forEach(function(t){by[t[1]]=(by[t[1]]||0)+t[3];tot+=t[3]});
+ var a0=-Math.PI/2,i=0,leg=document.getElementById('ds-pie-legend');
+ Object.keys(CAT).forEach(function(k){var v=by[k],a1=a0+2*Math.PI*v/tot,r=122,cx=130,cy=130,large=(a1-a0)>Math.PI?1:0;
+  var g=el('g',{class:'slice',style:'--d:'+(i*0.12)+'s'},svg);
+  el('path',{d:'M'+cx+' '+cy+' L'+(cx+r*Math.cos(a0))+' '+(cy+r*Math.sin(a0))+' A'+r+' '+r+' 0 '+large+' 1 '+(cx+r*Math.cos(a1))+' '+(cy+r*Math.sin(a1))+' Z',fill:CAT[k][1],stroke:'#fff','stroke-width':2},g);
+  var am=(a0+a1)/2;txt(g,cx+r*.62*Math.cos(am),cy+r*.62*Math.sin(am),(100*v/tot).toFixed(1)+'%',{'text-anchor':'middle','dominant-baseline':'central','font-size':13,'font-weight':700,fill:'#1a1714'});
+  tip(g,CAT[k][0]+': '+v.toFixed(1)+' min ('+(100*v/tot).toFixed(1)+'%)');
+  var d=document.createElement('div');d.innerHTML='<i style="background:'+CAT[k][1]+'"></i>'+CAT[k][0];leg.appendChild(d);a0=a1;i++});})();
+(function(){var svg=document.getElementById('ds-min'),L=44,B=200,W=460,H=180,mx=60;
+ [0,20,40,60].forEach(function(v){var y=B-H*v/mx;el('line',{x1:L,x2:L+W,y1:y,y2:y,stroke:'#1a171418'},svg);txt(svg,L-6,y+4,v,{'text-anchor':'end','font-size':11,fill:'#1a171499'})});
+ txt(svg,12,B-H/2,'Minutes',{transform:'rotate(-90 12 '+(B-H/2)+')','text-anchor':'middle','font-size':12,fill:'#1a171499'});
+ var bw=Math.min(W/TASKS.length,90),x0=L+(W-bw*TASKS.length)/2;TASKS.forEach(function(t,i){var h=H*t[3]/mx,x=x0+i*bw+5,g=el('g',{},svg);
+  el('rect',{x:x,y:B-h,width:bw-10,height:h,rx:3,fill:CAT[t[1]][1],class:'grow',style:'--d:'+(i*0.06)+'s'},g);
+  txt(g,x+(bw-10)/2,B-h-5,t[3].toFixed(1),{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.06)+'s'});
+  tip(g,t[0]+': '+t[3]+' min, '+t[2]+' episodes');
+  txt(svg,x+(bw-10)/2,B+10,t[0],{transform:'rotate(-30 '+(x+(bw-10)/2)+' '+(B+10)+')','text-anchor':'end','font-size':11.5,'font-style':'italic'})});})();
+(function(){var S=[['insert','Toy','Sep 28',108],['insert','Bag','Oct 18',52],['insert','Bag','Oct 19',76],['handover','Box','Oct 7',104],['extract','Tissue','Oct 9',102],['lift','Cup','Oct 14',100]];
+ var svg=document.getElementById('ds-ses'),L=48,B=195,W=900,H=150,mx=120,n=S.length,bw=Math.min(W/n,110),OX=L+(W-bw*n)/2;
+ var start=0;for(var i=0;i<=n;i++){if(i==n||S[i][0]!=S[start][0]){var k=S[start][0];el('rect',{x:OX+start*bw,y:B-H-22,width:(i-start)*bw,height:H+22,fill:CAT[k][1],'fill-opacity':.15},svg);
+   txt(svg,OX+(start+i)/2*bw,B-H-7,CAT[k][0],{'text-anchor':'middle','font-size':(i-start)>1?12.5:10.5,'font-weight':700,fill:'#1a1714cc'});start=i}}
+ [0,40,80,120].forEach(function(v){var y=B-H*v/mx;el('line',{x1:L,x2:L+W,y1:y,y2:y,stroke:'#1a171418'},svg);txt(svg,L-6,y+4,v,{'text-anchor':'end','font-size':11,fill:'#1a171499'})});
+ txt(svg,14,B-H/2,'Episodes',{transform:'rotate(-90 14 '+(B-H/2)+')','text-anchor':'middle','font-size':12,fill:'#1a171499'});
+ S.forEach(function(s,i){var h=H*s[3]/mx,x=OX+i*bw+7,g=el('g',{},svg);
+  el('rect',{x:x,y:B-h,width:bw-14,height:h,rx:3,fill:CAT[s[0]][1],class:'grow',style:'--d:'+(i*0.04)+'s'},g);
+  txt(g,x+(bw-14)/2,B-h-5,s[3],{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.04)+'s'});
+  tip(g,s[1]+', '+s[2]+': '+s[3]+' episodes');
+  txt(svg,x+(bw-14)/2,B+15,s[1],{'text-anchor':'middle','font-size':10.5,'font-style':'italic'});
+  txt(svg,x+(bw-14)/2,B+29,s[2],{'text-anchor':'middle','font-size':10,fill:'#1a171499'})});})();
+['ds-pie-card','ds-min-card','ds-ses-card'].forEach(function(id){var box=document.getElementById(id);
+ if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){var c=e.target.classList;if(e.isIntersecting){if(!c.contains('in')){void e.target.offsetWidth;c.add('in')}}else if(e.intersectionRatio===0){c.remove('in')}})},{threshold:[0,.3]}).observe(box)}else box.classList.add('in')});
+/* wall: recorded tasks play one head-camera episode */
+(function(){var W=document.getElementById('wall');if(!W)return;
+ var L=[['Grasp, lift, insert','toy','put the toy on the shelf','toy.mp4'],['Grasp, lift, insert','mug','put the mug in the backpack','mug.mp4'],['Handover','box','hand the tissue box over','handover.mp4'],['Grasp, lift, insert','bag','lift a light or heavy bag into a box','bag.mp4'],['Grasp & lift','cup','pick a full or an empty cup','cup.mp4'],['Extract','tissue','pull a tissue','tissue.mp4'],
+  ['Open & close','sprayer','open and close the sprayer cap',null],['Fold','towel','fold the towel',null],['Wrap','cord','wrap a cord',null],['Press','emergency button','press the emergency button',null],['Cut','cutter','cut with a cutter',null],['Peel','liner','peel the liner',null]];
+ L.forEach(function(t){var d=document.createElement('div');d.className='tile';var name=t[0]+' / '+t[1];
+  if(!t[3]){d.className='tile todo';d.innerHTML='<b>'+t[0]+' <i>/</i> '+t[1]+'</b><small>'+t[2]+'</small><em>to be recorded</em>';W.appendChild(d);return}
+  var v=document.createElement('video');v.muted=true;v.loop=true;v.playsInline=true;v.setAttribute('playsinline','');v.preload='none';v.dataset.src='project_page/videos/tiles/'+t[3];v.setAttribute('aria-label',name+' ('+t[2]+'): recorded teleoperated episode, head camera');d.appendChild(v);var s=document.createElement('span');s.textContent=name;d.appendChild(s);W.appendChild(d)});
+ if(!('IntersectionObserver' in window)){[].forEach.call(W.querySelectorAll('video'),function(v){v.src=v.dataset.src});return}
+ var o=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){if(!v.src)v.src=v.dataset.src;var p=v.play();if(p&&p.catch)p.catch(function(){})}else v.pause()})},{threshold:.3});
+ [].forEach.call(W.querySelectorAll('video'),function(v){o.observe(v)});})();
+})();
 </script>
 </body>
 </html>

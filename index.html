@@ -378,8 +378,8 @@ h3+.lead{margin-top:6px}
     <p class="lead">Teleoperated demonstrations with fingertip touch</p>
     <p>The expert policies we steer are trained on teleoperated demonstrations collected on a bimanual <strong>Dexmate Vega-1</strong> with two 7-DoF arms and two 12-DoF <strong>XHAND1</strong> dexterous hands with fingertip tactile sensing. Perception combines a head ZED X Mini stereo camera with two wrist cameras; teleoperation uses <strong>Manus gloves</strong> for the fingers and <strong>HTC VIVE trackers</strong> for the wrists. Each episode records, at 30&nbsp;Hz, three RGB streams, both arms and hands (measured and commanded), wrist and end-effector poses, and per-fingertip touch: a 3-axis force, a 120-taxel array and the sensor temperature for all ten fingertips.</p>
     <div class="stats">
-      <div class="stat"><b>2.6h</b><span>Teleoperated Demonstrations</span></div>
-      <div class="stat"><b>542</b><span>Successful Episodes</span></div>
+      <div class="stat"><b>3.2h</b><span>Teleoperated Demonstrations</span></div>
+      <div class="stat"><b>661</b><span>Successful Episodes</span></div>
       <div class="stat"><b>12</b><span>Manipulation Tasks, 6 recorded so far</span></div>
       <div class="stat"><b>3</b><span>Tactile Modalities</span></div>
     </div>
@@ -389,7 +389,7 @@ h3+.lead{margin-top:6px}
         <div class="card anim" id="ds-min-card"><svg id="ds-min" viewBox="0 0 520 300" role="img" aria-label="Minutes of demonstrations per task"></svg></div>
         <div class="card full anim" id="ds-ses-card"><svg id="ds-ses" viewBox="0 0 960 250" role="img" aria-label="Successful episodes per recording session, grouped by task category"></svg></div>
       </div>
-      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Bottom: successful episodes in each recording session, grouped by category. Only demonstrations with randomized object positions are counted, recorded September 28 to October 19, 2026, successful takes only; the mug-into-backpack statistics will be added, and we will update these numbers as collection continues.</figcaption>
+      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Bottom: successful episodes in each recording session, grouped by category. Only demonstrations with randomized object positions are counted, recorded September 28 to October 19, 2026, successful takes only; we will update these numbers as collection continues.</figcaption>
     </figure>
     <h3 id="dataset-explore">Explore the dataset</h3>
     <p>The recorded tasks, each named by its motion and object, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
@@ -686,9 +686,9 @@ function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttr
 function txt(p,x,y,s,a){var t=el('text',Object.assign({x:x,y:y},a||{}),p);t.textContent=s;return t}
 function tip(g,s){var t=el('title',{},g);t.textContent=s}
 if(!document.getElementById('ds-pie'))return;
-// randomized-position recordings; mug into backpack not yet counted
+// randomized-position recordings
 var CAT={insert:['Grasp, lift & insert','#e8918c'],handover:['Handover','#4fb0a0'],extract:['Extract','#e6b85c'],lift:['Grasp & lift','#8f86c9']};
-var TASKS=[['Grasp, lift, insert / toy','insert',108,33.0],['Grasp, lift, insert / bag','insert',128,50.4],['Handover / box','handover',104,33.1],['Extract / tissue','extract',102,18.3],['Grasp & lift / cup','lift',100,21.7]];
+var TASKS=[['Grasp, lift, insert / toy','insert',108,33.0],['Grasp, lift, insert / mug','insert',119,36.0],['Grasp, lift, insert / bag','insert',128,50.4],['Handover / box','handover',104,33.1],['Extract / tissue','extract',102,18.3],['Grasp & lift / cup','lift',100,21.7]];
 (function(){var svg=document.getElementById('ds-pie'),tot=0,by={};TASKS.forEach(function(t){by[t[1]]=(by[t[1]]||0)+t[3];tot+=t[3]});
  var a0=-Math.PI/2,i=0,leg=document.getElementById('ds-pie-legend');
  Object.keys(CAT).forEach(function(k){var v=by[k],a1=a0+2*Math.PI*v/tot,r=122,cx=130,cy=130,large=(a1-a0)>Math.PI?1:0;
@@ -705,7 +705,7 @@ var TASKS=[['Grasp, lift, insert / toy','insert',108,33.0],['Grasp, lift, insert
   txt(g,x+(bw-10)/2,B-h-5,t[3].toFixed(1),{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.06)+'s'});
   tip(g,t[0]+': '+t[3]+' min, '+t[2]+' episodes');
   txt(g,x+(bw-10)/2,B+10,t[0],{transform:'rotate(-30 '+(x+(bw-10)/2)+' '+(B+10)+')','text-anchor':'end','font-size':11.5,'font-style':'italic'})});})();
-(function(){var S=[['insert','Toy','Sep 28',108],['insert','Bag','Oct 18',52],['insert','Bag','Oct 19',76],['handover','Box','Oct 7',104],['extract','Tissue','Oct 9',102],['lift','Cup','Oct 14',100]];
+(function(){var S=[['insert','Toy','Sep 28',108],['insert','Mug','Oct 6',78],['insert','Mug','Oct 14',41],['insert','Bag','Oct 18',52],['insert','Bag','Oct 19',76],['handover','Box','Oct 7',104],['extract','Tissue','Oct 9',102],['lift','Cup','Oct 14',100]];
  var svg=document.getElementById('ds-ses'),L=48,B=195,W=900,H=150,mx=120,n=S.length,bw=Math.min(W/n,110),OX=L+(W-bw*n)/2;
  var start=0;for(var i=0;i<=n;i++){if(i==n||S[i][0]!=S[start][0]){var k=S[start][0];var gb=el('g',{'data-cat':k,class:'ds-band'},svg);el('rect',{x:OX+start*bw,y:B-H-22,width:(i-start)*bw,height:H+22,fill:CAT[k][1],'fill-opacity':.15},gb);
    txt(gb,OX+(start+i)/2*bw,B-H-7,CAT[k][0],{'text-anchor':'middle','font-size':(i-start)>1?12.5:10.5,'font-weight':700,fill:'#1a1714cc'});start=i}}

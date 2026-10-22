@@ -376,7 +376,7 @@ h3+.lead{margin-top:6px}
 
 <h2 id="dataset">Dataset</h2>
     <p class="lead">Teleoperated demonstrations with fingertip touch</p>
-    <p>The expert policies we steer are trained on teleoperated demonstrations collected on a bimanual Dexmate Vega-1 with two 7-DoF arms and two 12-DoF XHAND1 dexterous hands with fingertip tactile sensing. Perception combines a head ZED X Mini stereo camera with two wrist cameras; teleoperation uses Manus gloves for the fingers and HTC VIVE trackers for the wrists. Each episode records, at 30&nbsp;Hz, three RGB streams, both arms and hands (measured and commanded), wrist and end-effector poses, and per-fingertip touch: a 3-axis force, a 120-taxel array and the sensor temperature for all ten fingertips.</p>
+    <p>The expert policies we steer are trained on teleoperated demonstrations collected on a bimanual <strong>Dexmate Vega-1</strong> with two 7-DoF arms and two 12-DoF <strong>XHAND1</strong> dexterous hands with fingertip tactile sensing. Perception combines a head ZED X Mini stereo camera with two wrist cameras; teleoperation uses <strong>Manus gloves</strong> for the fingers and <strong>HTC VIVE trackers</strong> for the wrists. Each episode records, at 30&nbsp;Hz, three RGB streams, both arms and hands (measured and commanded), wrist and end-effector poses, and per-fingertip touch: a 3-axis force, a 120-taxel array and the sensor temperature for all ten fingertips.</p>
     <div class="stats">
       <div class="stat"><b>2.6h</b><span>Teleoperated Demonstrations</span></div>
       <div class="stat"><b>542</b><span>Successful Episodes</span></div>
@@ -687,7 +687,7 @@ function txt(p,x,y,s,a){var t=el('text',Object.assign({x:x,y:y},a||{}),p);t.text
 function tip(g,s){var t=el('title',{},g);t.textContent=s}
 if(!document.getElementById('ds-pie'))return;
 // randomized-position recordings; mug into backpack not yet counted
-var CAT={insert:['Grasp, lift & insert','#b9770c'],handover:['Handover','#f2c66d'],extract:['Extract','#8d8679'],lift:['Grasp & lift','#d3cdc0']};
+var CAT={insert:['Grasp, lift & insert','#e8918c'],handover:['Handover','#4fb0a0'],extract:['Extract','#e6b85c'],lift:['Grasp & lift','#8f86c9']};
 var TASKS=[['Grasp, lift, insert / toy','insert',108,33.0],['Grasp, lift, insert / bag','insert',128,50.4],['Handover / box','handover',104,33.1],['Extract / tissue','extract',102,18.3],['Grasp & lift / cup','lift',100,21.7]];
 (function(){var svg=document.getElementById('ds-pie'),tot=0,by={};TASKS.forEach(function(t){by[t[1]]=(by[t[1]]||0)+t[3];tot+=t[3]});
  var a0=-Math.PI/2,i=0,leg=document.getElementById('ds-pie-legend');
@@ -701,7 +701,7 @@ var TASKS=[['Grasp, lift, insert / toy','insert',108,33.0],['Grasp, lift, insert
  [0,20,40,60].forEach(function(v){var y=B-H*v/mx;el('line',{x1:L,x2:L+W,y1:y,y2:y,stroke:'#1a171418'},svg);txt(svg,L-6,y+4,v,{'text-anchor':'end','font-size':11,fill:'#1a171499'})});
  txt(svg,12,B-H/2,'Minutes',{transform:'rotate(-90 12 '+(B-H/2)+')','text-anchor':'middle','font-size':12,fill:'#1a171499'});
  var bw=Math.min(W/TASKS.length,90),x0=L+(W-bw*TASKS.length)/2;TASKS.forEach(function(t,i){var h=H*t[3]/mx,x=x0+i*bw+5,g=el('g',{'data-cat':t[1]},svg);
-  el('rect',{x:x,y:B-h,width:bw-10,height:h,rx:3,fill:CAT[t[1]][1],class:'grow',style:'--d:'+(i*0.06)+'s'},g);
+  el('rect',{x:x,y:B-h,width:bw-10,height:h,rx:3,fill:'rgb('+(22+i*13)+','+(80+i*12)+','+(150+i*9)+')',class:'grow',style:'--d:'+(i*0.06)+'s'},g);
   txt(g,x+(bw-10)/2,B-h-5,t[3].toFixed(1),{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.06)+'s'});
   tip(g,t[0]+': '+t[3]+' min, '+t[2]+' episodes');
   txt(g,x+(bw-10)/2,B+10,t[0],{transform:'rotate(-30 '+(x+(bw-10)/2)+' '+(B+10)+')','text-anchor':'end','font-size':11.5,'font-style':'italic'})});})();

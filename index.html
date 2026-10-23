@@ -392,7 +392,7 @@ h3+.lead{margin-top:6px}
       <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Bottom: released episodes per task, grouped by category. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
     </figure>
     <h3 id="dataset-explore">Explore the dataset</h3>
-    <p>The recorded tasks, each named by its motion and object, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
+    <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
     <div class="wall" id="wall" aria-label="Recorded episodes, one per task"></div>
 
 <h2 id="code">Quick Start</h2>
@@ -690,12 +690,12 @@ if(!document.getElementById('ds-pie'))return;
    file updates the page. FALLBACK is the same file as of 2026-10-23, used only if the fetch fails. */
 var STATS='https://huggingface.co/GlobalMotionPlanning/GlobMP/resolve/main/applications/steering/xhand_data/stats.json';
 var FALLBACK={planned_tasks:12,tactile_modalities:3,episodes:600,hours:2.81,tasks:[
- {folder:'toy_shelf_random_0928',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:100,minutes:30.2,recorded:['2026-09-28']},
- {folder:'mug_backpack_random_1006_1014',motion:'Grasp, lift, insert',object:'mug',category:'Grasp, lift & insert',episodes:100,minutes:29.1,recorded:['2026-10-06','2026-10-14']},
- {folder:'bag_box_1019',motion:'Grasp, lift, insert',object:'bag',category:'Grasp, lift & insert',episodes:100,minutes:37.7,recorded:['2026-10-18','2026-10-19']},
- {folder:'handover_random_1007',motion:'Handover',object:'box',category:'Handover',episodes:100,minutes:32.0,recorded:['2026-10-07']},
- {folder:'tissue_random_1009',motion:'Extract',object:'tissue',category:'Extract',episodes:100,minutes:18.0,recorded:['2026-10-09']},
- {folder:'pick_cup_full_empty_random_1014',motion:'Grasp & lift',object:'cup',category:'Grasp & lift',episodes:100,minutes:21.7,recorded:['2026-10-14']}]};
+ {folder:'toy_shelf_random_0928',name:'Toy pick-and-place',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:100,minutes:30.2,recorded:['2026-09-28']},
+ {folder:'mug_backpack_random_1006_1014',name:'Mug into backpack',motion:'Grasp, lift, insert',object:'mug',category:'Grasp, lift & insert',episodes:100,minutes:29.1,recorded:['2026-10-06','2026-10-14']},
+ {folder:'bag_box_1019',name:'Bag into box',motion:'Grasp, lift, insert',object:'bag',category:'Grasp, lift & insert',episodes:100,minutes:37.7,recorded:['2026-10-18','2026-10-19']},
+ {folder:'handover_random_1007',name:'Tissue-box handover',motion:'Handover',object:'box',category:'Handover',episodes:100,minutes:32.0,recorded:['2026-10-07']},
+ {folder:'tissue_random_1009',name:'Pull a tissue',motion:'Extract',object:'tissue',category:'Extract',episodes:100,minutes:18.0,recorded:['2026-10-09']},
+ {folder:'pick_cup_full_empty_random_1014',name:'Heavy-light cup',motion:'Grasp & lift',object:'cup',category:'Grasp & lift',episodes:100,minutes:21.7,recorded:['2026-10-14']}]};
 // category colours in a fixed order; a new category takes the next spare colour
 var CATCOL={'Grasp, lift & insert':'#e8918c','Handover':'#4fb0a0','Extract':'#e6b85c','Grasp & lift':'#8f86c9'},SPARE=['#7fa7d8','#c98fb8','#9cbf6e','#d9a37a'];
 // head-camera clip and one-line description per task folder; a folder without one shows a "recorded" tile
@@ -714,8 +714,9 @@ function draw(D){
  cats.forEach(function(c,i){CAT['c'+i]=[c,CATCOL[c]||SPARE[(i-known.length+SPARE.length)%SPARE.length]]});
  function key(c){return 'c'+cats.indexOf(c)}
  var tasks=D.tasks.slice().sort(function(a,b){return cats.indexOf(a.category)-cats.indexOf(b.category)||(a.recorded[0]<b.recorded[0]?-1:1)});
- var TASKS=tasks.map(function(t){return [t.motion+(t.object?' / '+t.object:''),key(t.category),t.episodes,t.minutes]});
- var S=tasks.map(function(t){return [key(t.category),t.object?t.object[0].toUpperCase()+t.object.slice(1):t.folder,t.recorded.map(short).join(', '),t.episodes]});
+ function nm(t){return t.name||t.motion+(t.object?' / '+t.object:'')}
+ var TASKS=tasks.map(function(t){return [nm(t),key(t.category),t.episodes,t.minutes]});
+ var S=tasks.map(function(t){return [key(t.category),nm(t),t.recorded.map(short).join(', '),t.episodes]});
  var all=[];tasks.forEach(function(t){all=all.concat(t.recorded)});all.sort();
  // stat cards and caption
  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v}
@@ -750,14 +751,14 @@ function draw(D){
    el('rect',{x:x,y:B-h,width:bw-14,height:h,rx:3,fill:CAT[s[0]][1],class:'grow',style:'--d:'+(i*0.04)+'s'},g);
    txt(g,x+(bw-14)/2,B-h-5,s[3],{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.04)+'s'});
    tip(g,s[1]+' (recorded '+s[2]+'): '+s[3]+' episodes');
-   txt(g,x+(bw-14)/2,B+15,s[1],{'text-anchor':'middle','font-size':10.5,'font-style':'italic'})});})();
+   txt(g,x+(bw-14)/2,B+15,s[1],{'text-anchor':'middle','font-size':11,'font-style':'italic'})});})();
  /* linked hover, as on the T-Rex page: one category lights up in every chart, the rest fade */
  (function(){var F=document.querySelector('#dataset ~ figure .charts');if(!F)return;
   function hl(k){F.classList.toggle('ds-hl',!!k);[].forEach.call(F.querySelectorAll('[data-cat]'),function(e){e.classList.toggle('on',e.getAttribute('data-cat')===k)})}
   [].forEach.call(F.querySelectorAll('[data-cat]'),function(e){e.addEventListener('mouseenter',function(){hl(e.getAttribute('data-cat'))});e.addEventListener('mouseleave',function(){hl(null)})});})();
  /* wall: recorded tasks play one head-camera episode, the rest of the planned tasks are coming soon */
  (function(){var W=document.getElementById('wall');if(!W)return;W.innerHTML='';
-  var L=tasks.map(function(t){var c=CLIP[t.folder];return [t.motion,t.object,c?c[1]:t.episodes+' episodes',c?c[0]:null]});
+  var L=tasks.map(function(t){var c=CLIP[t.folder];return [nm(t),'',c?c[1]:t.episodes+' episodes',c?c[0]:null]});
   for(var i=L.length;i<Math.max(D.planned_tasks,L.length);i++)L.push(null);
   L.forEach(function(t){var d=document.createElement('div');d.className='tile';
    if(!t){d.className='tile todo';d.innerHTML='<b>Coming soon</b>';W.appendChild(d);return}

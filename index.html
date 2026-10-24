@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>GlobMP: Continuous-Time Constrained Motion Planning</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Condensed:wght@700&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: T-Rex article layout. Full-screen hero video, then a sticky contents list on the left of one 965px reading column; cream "day" theme with gold accents. Single deliberate light theme. */
@@ -13,7 +13,7 @@
   --cream:#ffffff; --ink:#111318; --gold:#1428a0; --gold-bright:#2a6df4;
   --line:#11131824; --line-strong:#11131847; --muted:#11131899; --text:#111318e6;
   --hero-bg:#050505; --white:#ffffff;
-  --serif:'Source Serif 4', Georgia, 'Times New Roman', serif;
+  --serif:'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
   --mono:'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
   color-scheme:light;
 }
@@ -352,9 +352,8 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
       <div class="charts">
         <div class="card anim" id="ds-pie-card"><div class="pie-wrap"><svg id="ds-pie" viewBox="0 0 260 260" role="img" aria-label="Share of demonstration time per task category"></svg><div class="legend" id="ds-pie-legend"></div></div></div>
         <div class="card anim" id="ds-min-card"><svg id="ds-min" viewBox="0 0 520 300" role="img" aria-label="Minutes of demonstrations per task"></svg></div>
-        <div class="card full anim" id="ds-ses-card"><svg id="ds-ses" viewBox="0 0 960 250" role="img" aria-label="Released episodes per task, grouped by task category"></svg></div>
       </div>
-      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Bottom: released episodes per task, grouped by category. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
+      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
     </figure>
     <h4 id="dataset-explore">Explore the dataset</h4>
     <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
@@ -726,7 +725,7 @@ function draw(D){
  var per=tasks.every(function(t){return t.episodes===tasks[0].episodes});set('ds-eps-l','Released Episodes'+(per?', '+tasks[0].episodes+' per Task':''));
  set('ds-tasks',D.planned_tasks);set('ds-tasks-l','Manipulation Tasks, '+tasks.length+' recorded so far');set('ds-tact',D.tactile_modalities);
  if(all.length)set('ds-span',long(all[0])+' to '+long(all[all.length-1])+', '+all[all.length-1].slice(0,4));
- ['ds-pie','ds-min','ds-ses'].forEach(function(id){document.getElementById(id).innerHTML=''});document.getElementById('ds-pie-legend').innerHTML='';
+ ['ds-pie','ds-min'].forEach(function(id){document.getElementById(id).innerHTML=''});document.getElementById('ds-pie-legend').innerHTML='';
  (function(){var svg=document.getElementById('ds-pie'),tot=0,by={};TASKS.forEach(function(t){by[t[1]]=(by[t[1]]||0)+t[3];tot+=t[3]});
   var a0=-Math.PI/2,i=0,leg=document.getElementById('ds-pie-legend');
   Object.keys(CAT).forEach(function(k){var v=by[k],a1=a0+2*Math.PI*v/tot,r=122,cx=130,cy=130,large=(a1-a0)>Math.PI?1:0;
@@ -744,7 +743,7 @@ function draw(D){
    txt(g,x+(bw-10)/2,B-h-5,t[3].toFixed(1),{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.06)+'s'});
    tip(g,t[0]+': '+t[3]+' min, '+t[2]+' episodes');
    txt(g,x+(bw-10)/2,B+10,t[0],{transform:'rotate(-30 '+(x+(bw-10)/2)+' '+(B+10)+')','text-anchor':'end','font-size':11.5,'font-style':'italic'})});})();
- (function(){var svg=document.getElementById('ds-ses'),L=48,B=195,W=900,H=150,mx=nice(Math.max.apply(null,S.map(function(s){return s[3]}))),st=mx/4,n=S.length,bw=Math.min(W/n,110),OX=L+(W-bw*n)/2;
+ (function(){var svg=document.getElementById('ds-ses');if(!svg)return;var L=48,B=195,W=900,H=150,mx=nice(Math.max.apply(null,S.map(function(s){return s[3]}))),st=mx/4,n=S.length,bw=Math.min(W/n,110),OX=L+(W-bw*n)/2;
   var start=0;for(var i=0;i<=n;i++){if(i==n||S[i][0]!=S[start][0]){var k=S[start][0];var gb=el('g',{'data-cat':k,class:'ds-band'},svg);el('rect',{x:OX+start*bw,y:B-H-22,width:(i-start)*bw,height:H+22,fill:CAT[k][1],'fill-opacity':.15},gb);
     txt(gb,OX+(start+i)/2*bw,B-H-7,CAT[k][0],{'text-anchor':'middle','font-size':(i-start)>1?12.5:10.5,'font-weight':700,fill:'#111318cc'});start=i}}
   for(var v=0;v<=mx+1e-9;v+=st){var y=B-H*v/mx;el('line',{x1:L,x2:L+W,y1:y,y2:y,stroke:'#11131818'},svg);txt(svg,L-6,y+4,+v.toFixed(0),{'text-anchor':'end','font-size':11,fill:'#11131899'})}
@@ -771,7 +770,7 @@ function draw(D){
   var o=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){if(!v.src)v.src=v.dataset.src;var p=v.play();if(p&&p.catch)p.catch(function(){})}else v.pause()})},{threshold:.3});
   [].forEach.call(W.querySelectorAll('video'),function(v){o.observe(v)});})();
 }
-['ds-pie-card','ds-min-card','ds-ses-card'].forEach(function(id){var box=document.getElementById(id);
+['ds-pie-card','ds-min-card'].forEach(function(id){var box=document.getElementById(id);
  if('IntersectionObserver' in window){new IntersectionObserver(function(es){es.forEach(function(e){var c=e.target.classList;if(e.isIntersecting){if(!c.contains('in')){void e.target.offsetWidth;c.add('in')}}else if(e.intersectionRatio===0){c.remove('in')}})},{threshold:[0,.3]}).observe(box)}else box.classList.add('in')});
 var done=false;function go(D){if(done)return;done=true;try{draw(D)}catch(e){if(D!==FALLBACK){done=false;go(FALLBACK)}}}
 if(window.fetch){var tm=setTimeout(function(){go(FALLBACK)},6000);

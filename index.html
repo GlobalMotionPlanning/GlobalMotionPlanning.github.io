@@ -237,7 +237,7 @@ h3+.lead{margin-top:6px}
 .tfoot{position:relative;min-height:134px;padding-right:228px}
 .tfoot .links{margin-top:16px}
 .title-block .authors{padding-right:228px}
-.teaser{position:absolute;right:0;top:-34px;width:208px;height:auto;border-radius:10px;display:block}
+.teaser{position:absolute;right:0;top:-34px;width:208px;height:auto;border-radius:10px;display:block;border:1px solid #1428a033}
 .title-block .logos{margin-top:16px}
 @media (max-width:760px){.title-block .authors{padding-right:0}.tfoot{padding-right:0;min-height:0}.teaser{position:static;margin-top:14px;width:150px}}
 .hero{height:auto;min-height:0}
@@ -303,7 +303,7 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
        <a class="link" href="https://github.com/GlobalMotionPlanning/GlobMP" target="_blank" rel="noopener">Code (GitHub)</a>
        <a class="link" href="https://huggingface.co/GlobalMotionPlanning/GlobMP" target="_blank" rel="noopener">Code and data (Hugging Face)</a>
      </div>
-     <div class="logos"><img src="project_page/figs/samsung_sds_logo_blue.png" width="1280" height="161" alt="Samsung SDS"><span class="logo-ra">RESEARCH AMERICA</span></div>
+     <div class="logos"><img src="project_page/figs/samsung_logo.svg" width="7051" height="1080" alt="Samsung" style="height:24px;width:auto"></div>
        <img class="teaser" src="project_page/figs/teaser_steering.gif" width="1080" height="900" alt="Animation of steering in a receding-horizon loop: at each chunk a policy proposes its next motion (grey, dashed), red where it would hit an obstacle; GlobMP returns the closest smooth motion inside a tube around the proposal that clears every obstacle, the robot drives it, and the next chunk is proposed from there.">
      </div>
    </header>
@@ -327,8 +327,8 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
 <figcaption>Steered motion planning, illustrated on the handover task: the meta-reasoner sets keep-out, keep-in and grip blocks once; then, for every chunk, the policy proposes <span class="math">ρ</span> (grey, red where it would collide), GlobMP returns a smooth, collision-free curve <span class="math">γ</span> close to it, and the robot executes it at 30&nbsp;Hz. Measured events (stall, touch, grasp force) switch blocks and <span class="math">ρ</span> with no further call. Schematic.</figcaption>
 </figure>
 <!-- NOTE: in the XHand recordings the wrist-camera files are swapped (left_wrist shows the right hand). The wrist labels burned into teleop_*.mp4 and the "left wrist" thumbnail in the pipeline animation account for this; see teleop_composite.py before re-rendering. -->
-<div class="pills" id="tel-pills"><button class="pill" type="button" data-k="bag" aria-pressed="true">Bag into box</button><button class="pill" type="button" data-k="handover" aria-pressed="false">Tissue-box handover</button><button class="pill" type="button" data-k="tissue" aria-pressed="false">Pull a tissue</button><button class="pill" type="button" data-k="cup" aria-pressed="false">Full-cup pick</button></div>
-<div class="player"><video id="tel-video" src="project_page/videos/teleop_bag.mp4" poster="project_page/posters/teleop_bag.jpg" controls autoplay muted loop playsinline preload="auto" aria-label="GlobMP rollout: head camera, both wrist cameras, the ten fingertip pressure maps, and the fingertip force of each hand over time"></video></div>
+<div class="pills" id="tel-pills"><button class="pill" type="button" data-k="handover" aria-pressed="true">Tissue-box handover</button><button class="pill" type="button" data-k="bag" aria-pressed="false">Bag into box</button><button class="pill" type="button" data-k="tissue" aria-pressed="false">Pull a tissue</button><button class="pill" type="button" data-k="cup" aria-pressed="false">Full-cup pick</button></div>
+<div class="player"><video id="tel-video" src="project_page/videos/teleop_handover.mp4" poster="project_page/posters/teleop_handover.jpg" controls autoplay muted loop playsinline preload="auto" aria-label="GlobMP rollout: head camera, both wrist cameras, the ten fingertip pressure maps, and the fingertip force of each hand over time"></video></div>
 <figure><div class="card anim"><div class="keyrow" id="steer-key"></div><svg id="steer" viewBox="0 0 900 290" role="img" aria-label="Real-robot success per task for GR00T N1.7 and pi0.5 in four conditions"></svg></div>
    <figcaption>Real-robot success per task, 10 trials per bar, for each expert policy alone, with touch, steered, and steered with touch. Steering matches or raises every task; it turns the tissue task, which the policies alone rarely complete, into a mostly successful one, and brings the handover to every trial. A dash marks a condition that was not run.</figcaption></figure>
 

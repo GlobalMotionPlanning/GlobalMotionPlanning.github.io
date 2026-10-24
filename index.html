@@ -281,10 +281,10 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
     <a href="#method">Method</a>
     <a href="#experiments">Performance</a>
     <a href="#applications">Applications</a>
-    <a class="sub" href="#multirobot">Multi-robot</a>
     <a class="sub" href="#steering">Humanoid dexterous manipulation</a>
     <a class="sub sub2" href="#dataset">Dataset</a>
     <a class="sub sub2" href="#dataset-explore">Explore the dataset</a>
+    <a class="sub" href="#multirobot">Multi-robot</a>
     <a class="sub" href="#avoidance">Obstacle avoidance</a>
     <a class="sub" href="#maze">Maze2D</a>
     <a href="#code">Quick Start</a>
@@ -319,14 +319,6 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
     <figure><div class="card synth" data-src="project_page/figs/svg/fig_synth1.svg" data-fallback="project_page/figs/fig_synth1_gold.png" role="img" aria-label="Tightness and cost"></div><figcaption>Clearance of the returned trajectory on one instance (a) and on all instances (b), and cost relative to GlobMP against the number of robots (c). Below zero is a violation.</figcaption></figure>
 
 <h2 id="applications">Applications</h2>
-<h3 id="multirobot">Multi-robot experiments</h3>
-    <p class="lead">Robotarium, twelve robots, five scenarios, six planners (5&times; speed)</p>
-    <div id="mwrap"><div class="mtabs"><button class="mbtn on" data-s="all">All scenarios</button><button class="mbtn" data-s="crossroom">Cross-Room</button><button class="mbtn" data-s="corridor">Conveyor</button><button class="mbtn" data-s="corridorbay">Corridor-Bay</button><button class="mbtn" data-s="shelf">Drop-Region</button><button class="mbtn" data-s="empty">Empty</button></div>
-    <div class="mgrid" id="mgrid"><div class="mcell"><video muted loop playsinline preload="metadata" data-m="CD"></video><div class="mname">CD</div></div><div class="mcell"><video muted loop playsinline preload="metadata" data-m="MMD-CBS"></video><div class="mname">MMD-CBS</div></div><div class="mcell"><video muted loop playsinline preload="metadata" data-m="PCD-SHD"></video><div class="mname">PCD-SHD</div></div><div class="mcell"><video muted loop playsinline preload="metadata" data-m="Final"></video><div class="mname">Final Proj.</div></div><div class="mcell"><video muted loop playsinline preload="metadata" data-m="DiRecT"></video><div class="mname">DiRecT</div></div><div class="mcell us"><video muted loop playsinline preload="metadata" data-m="GlobMP"></video><div class="mname">GlobMP (ours)</div></div></div>
-    <figure id="mall" style="display:none;max-width:1000px"><video src="project_page/videos/robotarium_all.mp4" poster="project_page/posters/robotarium_all.jpg" muted loop playsinline preload="metadata" style="width:100%;border-radius:12px;background:#000"></video></figure></div>
-<figure><div class="charts two"><div class="card anim"><svg id="ext-sr" viewBox="0 0 470 330" role="img" aria-label="Single-plan success against robot-robot constraints: GlobMP 99 to 81 percent, PDM 76 to 62, DiRecT 65 to 38, Final Proj. 56 to 8, PCD-SHD 37 to 0, CD 37 to 0."></svg></div><div class="card anim"><svg id="ext-t" viewBox="0 0 470 330" role="img" aria-label="Planning time per team against robot-robot constraints, log scale: GlobMP 0.9 s to 46 s, DiRecT 28 s to 87 s, MMD-CBS 2.5 s to 22 s, Final Proj. 3.8 s to 15 s, PCD-SHD 2.2 s to 3.9 s, CD near 1 s."></svg></div></div>
-   <figcaption>Extended benchmark, 3 to 21 robots (3 to 210 pair constraints, each at every instant), Medium velocity cap, mean over 8 maps. <b>Left:</b> single-plan success, GlobMP 99% → 81%. <b>Right:</b> planning time per team, log scale; GlobMP's time is a median and the baselines' a mean, as in the paper's tables.</figcaption></figure>
-
 <h3 id="steering">Humanoid dexterous manipulation</h3>
     <p class="lead">Steering tactile-reactive dexterous policies on a bimanual humanoid</p>
     <p>GlobMP steers the action chunks of a learned policy (GR00T N1.7, &pi;<sub>0.5</sub>) on a bimanual robot with two XHAND1 hands. A meta-reasoner picks the constraint blocks once per episode, and GlobMP returns a curve that meets every block at every instant while staying close to the policy.</p>
@@ -336,7 +328,7 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
 </figure>
 <!-- NOTE: in the XHand recordings the wrist-camera files are swapped (left_wrist shows the right hand). The wrist labels burned into teleop_*.mp4 and the "left wrist" thumbnail in the pipeline animation account for this; see teleop_composite.py before re-rendering. -->
 <div class="pills" id="tel-pills"><button class="pill" type="button" data-k="bag" aria-pressed="true">Bag into box</button><button class="pill" type="button" data-k="handover" aria-pressed="false">Tissue-box handover</button><button class="pill" type="button" data-k="tissue" aria-pressed="false">Pull a tissue</button><button class="pill" type="button" data-k="cup" aria-pressed="false">Full-cup pick</button></div>
-<div class="player"><video id="tel-video" src="project_page/videos/teleop_bag.mp4" poster="project_page/posters/teleop_bag.jpg" controls autoplay muted loop playsinline preload="auto" aria-label="Teleoperation episode: head camera, both wrist cameras, the ten fingertip pressure maps, and the fingertip force of each hand over time"></video></div>
+<div class="player"><video id="tel-video" src="project_page/videos/teleop_bag.mp4" poster="project_page/posters/teleop_bag.jpg" controls autoplay muted loop playsinline preload="auto" aria-label="GlobMP rollout: head camera, both wrist cameras, the ten fingertip pressure maps, and the fingertip force of each hand over time"></video></div>
 <figure><div class="card anim"><div class="keyrow" id="steer-key"></div><svg id="steer" viewBox="0 0 900 290" role="img" aria-label="Real-robot success per task for GR00T N1.7 and pi0.5 in four conditions"></svg></div>
    <figcaption>Real-robot success per task, 10 trials per bar, for each expert policy alone, with touch, steered, and steered with touch. Steering matches or raises every task; it turns the tissue task, which the policies alone rarely complete, into a mostly successful one, and brings the handover to every trial. A dash marks a condition that was not run.</figcaption></figure>
 
@@ -367,6 +359,14 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
     <h4 id="dataset-explore">Explore the dataset</h4>
     <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
     <div class="wall" id="wall" aria-label="Recorded episodes, one per task"></div>
+
+<h3 id="multirobot">Multi-robot experiments</h3>
+    <p class="lead">Robotarium, twelve robots, five scenarios, six planners (5&times; speed)</p>
+    <div id="mwrap"><div class="mtabs"><button class="mbtn on" data-s="all">All scenarios</button><button class="mbtn" data-s="crossroom">Cross-Room</button><button class="mbtn" data-s="corridor">Conveyor</button><button class="mbtn" data-s="corridorbay">Corridor-Bay</button><button class="mbtn" data-s="shelf">Drop-Region</button><button class="mbtn" data-s="empty">Empty</button></div>
+    <div class="mgrid" id="mgrid"><div class="mcell"><video muted loop playsinline preload="metadata" data-m="CD"></video><div class="mname">CD</div></div><div class="mcell"><video muted loop playsinline preload="metadata" data-m="MMD-CBS"></video><div class="mname">MMD-CBS</div></div><div class="mcell"><video muted loop playsinline preload="metadata" data-m="PCD-SHD"></video><div class="mname">PCD-SHD</div></div><div class="mcell"><video muted loop playsinline preload="metadata" data-m="Final"></video><div class="mname">Final Proj.</div></div><div class="mcell"><video muted loop playsinline preload="metadata" data-m="DiRecT"></video><div class="mname">DiRecT</div></div><div class="mcell us"><video muted loop playsinline preload="metadata" data-m="GlobMP"></video><div class="mname">GlobMP (ours)</div></div></div>
+    <figure id="mall" style="display:none;max-width:1000px"><video src="project_page/videos/robotarium_all.mp4" poster="project_page/posters/robotarium_all.jpg" muted loop playsinline preload="metadata" style="width:100%;border-radius:12px;background:#000"></video></figure></div>
+<figure><div class="charts two"><div class="card anim"><svg id="ext-sr" viewBox="0 0 470 330" role="img" aria-label="Single-plan success against robot-robot constraints: GlobMP 99 to 81 percent, PDM 76 to 62, DiRecT 65 to 38, Final Proj. 56 to 8, PCD-SHD 37 to 0, CD 37 to 0."></svg></div><div class="card anim"><svg id="ext-t" viewBox="0 0 470 330" role="img" aria-label="Planning time per team against robot-robot constraints, log scale: GlobMP 0.9 s to 46 s, DiRecT 28 s to 87 s, MMD-CBS 2.5 s to 22 s, Final Proj. 3.8 s to 15 s, PCD-SHD 2.2 s to 3.9 s, CD near 1 s."></svg></div></div>
+   <figcaption>Extended benchmark, 3 to 21 robots (3 to 210 pair constraints, each at every instant), Medium velocity cap, mean over 8 maps. <b>Left:</b> single-plan success, GlobMP 99% → 81%. <b>Right:</b> planning time per team, log scale; GlobMP's time is a median and the baselines' a mean, as in the paper's tables.</figcaption></figure>
 
 <h3 id="avoidance">Obstacle avoidance</h3>
     <p class="lead">Collision-free motion in end-effector space (D3IL avoiding-v0)</p>

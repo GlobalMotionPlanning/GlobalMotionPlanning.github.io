@@ -253,6 +253,8 @@ h3+.lead{margin-top:6px}
 .anim.in .pop{transform:none;transition:transform .55s cubic-bezier(.34,1.56,.64,1);transition-delay:var(--d,0s)}
 #sr-ts text{font-family:var(--serif)}
 #mz-db text{font-family:var(--serif)}
+h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:1.2;scroll-margin-top:32px}
+.outline a.sub2{padding-left:24px;font-size:12.5px}
 .charts [data-cat]{transition:opacity .18s}.charts [data-cat] text{transition:font-weight .1s}
 .charts.ds-hl [data-cat]:not(.on){opacity:.22}.charts.ds-hl g.on text{font-weight:700}.charts.ds-hl .legend .on{font-weight:700;color:var(--ink)}
 .charts .legend div,.charts g[data-cat]{cursor:pointer}
@@ -280,11 +282,11 @@ h3+.lead{margin-top:6px}
     <a href="#experiments">Performance</a>
     <a href="#applications">Applications</a>
     <a class="sub" href="#multirobot">Multi-robot</a>
-    <a class="sub" href="#steering">Steering</a>
+    <a class="sub" href="#steering">Humanoid dexterous manipulation</a>
+    <a class="sub sub2" href="#dataset">Dataset</a>
+    <a class="sub sub2" href="#dataset-explore">Explore the dataset</a>
     <a class="sub" href="#avoidance">Obstacle avoidance</a>
     <a class="sub" href="#maze">Maze2D</a>
-    <a href="#dataset">Dataset</a>
-    <a class="sub" href="#dataset-explore">Explore the dataset</a>
     <a href="#code">Quick Start</a>
     <a href="#citation">Citation</a>
     <a href="#acknowledgements">Acknowledgements</a>
@@ -325,7 +327,7 @@ h3+.lead{margin-top:6px}
 <figure><div class="charts two"><div class="card anim"><svg id="ext-sr" viewBox="0 0 470 330" role="img" aria-label="Single-plan success against robot-robot constraints: GlobMP 99 to 81 percent, PDM 76 to 62, DiRecT 65 to 38, Final Proj. 56 to 8, PCD-SHD 37 to 0, CD 37 to 0."></svg></div><div class="card anim"><svg id="ext-t" viewBox="0 0 470 330" role="img" aria-label="Planning time per team against robot-robot constraints, log scale: GlobMP 0.9 s to 46 s, DiRecT 28 s to 87 s, MMD-CBS 2.5 s to 22 s, Final Proj. 3.8 s to 15 s, PCD-SHD 2.2 s to 3.9 s, CD near 1 s."></svg></div></div>
    <figcaption>Extended benchmark, 3 to 21 robots (3 to 210 pair constraints, each at every instant), Medium velocity cap, mean over 8 maps. <b>Left:</b> single-plan success, GlobMP 99% → 81%. <b>Right:</b> planning time per team, log scale; GlobMP's time is a median and the baselines' a mean, as in the paper's tables.</figcaption></figure>
 
-<h3 id="steering">Steering</h3>
+<h3 id="steering">Humanoid dexterous manipulation</h3>
     <p class="lead">Steering tactile-reactive dexterous policies on a bimanual humanoid</p>
     <p>GlobMP steers the action chunks of a learned policy (GR00T N1.7, &pi;<sub>0.5</sub>) on a bimanual robot with two XHAND1 hands. A meta-reasoner picks the constraint blocks once per episode, and GlobMP returns a curve that meets every block at every instant while staying close to the policy.</p>
     <figure>
@@ -344,6 +346,27 @@ h3+.lead{margin-top:6px}
 
 
 
+
+<h4 id="dataset">Dataset</h4>
+    <p class="lead">Teleoperated demonstrations with fingertip touch</p>
+    <p>The expert policies we steer are trained on teleoperated demonstrations collected on a bimanual <strong>Dexmate Vega-1</strong> with two 7-DoF arms and two 12-DoF <strong>XHAND1</strong> dexterous hands with fingertip tactile sensing. Perception combines a head ZED X Mini stereo camera with two wrist cameras; teleoperation uses <strong>Manus gloves</strong> for the fingers and <strong>HTC VIVE trackers</strong> for the wrists. Each episode records, at 30&nbsp;Hz, three RGB streams, both arms and hands (measured and commanded), wrist and end-effector poses, and per-fingertip touch: a 3-axis force, a 120-taxel array and the sensor temperature for all ten fingertips.</p>
+    <div class="stats">
+      <div class="stat"><b id="ds-hours">&nbsp;</b><span>Teleoperated Demonstrations</span></div>
+      <div class="stat"><b id="ds-eps">&nbsp;</b><span id="ds-eps-l">Released Episodes</span></div>
+      <div class="stat"><b id="ds-tasks">&nbsp;</b><span id="ds-tasks-l">Manipulation Tasks</span></div>
+      <div class="stat"><b id="ds-tact">&nbsp;</b><span>Tactile Modalities</span></div>
+    </div>
+    <figure>
+      <div class="charts">
+        <div class="card anim" id="ds-pie-card"><div class="pie-wrap"><svg id="ds-pie" viewBox="0 0 260 260" role="img" aria-label="Share of demonstration time per task category"></svg><div class="legend" id="ds-pie-legend"></div></div></div>
+        <div class="card anim" id="ds-min-card"><svg id="ds-min" viewBox="0 0 520 300" role="img" aria-label="Minutes of demonstrations per task"></svg></div>
+        <div class="card full anim" id="ds-ses-card"><svg id="ds-ses" viewBox="0 0 960 250" role="img" aria-label="Released episodes per task, grouped by task category"></svg></div>
+      </div>
+      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Bottom: released episodes per task, grouped by category. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
+    </figure>
+    <h4 id="dataset-explore">Explore the dataset</h4>
+    <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
+    <div class="wall" id="wall" aria-label="Recorded episodes, one per task"></div>
 
 <h3 id="avoidance">Obstacle avoidance</h3>
     <p class="lead">Collision-free motion in end-effector space (D3IL avoiding-v0)</p>
@@ -373,27 +396,6 @@ h3+.lead{margin-top:6px}
     <figure style="max-width:900px"><video src="project_page/videos/maze2d_narrow.mp4" poster="project_page/posters/maze2d_narrow.jpg" autoplay muted loop playsinline controls preload="auto" style="width:100%;border-radius:12px;background:transparent"></video><figcaption>Narrow setting, with six keep-outs.</figcaption></figure>
 
     <figure style="max-width:760px;margin-left:auto;margin-right:auto"><div class="card anim" id="mz-db-card"><svg id="mz-db" viewBox="0 0 760 470" role="img" aria-label="Keep-out violations per run, Broad to Narrow, with success rate. GlobMP 0 to 0, success 1.0 and 1.0; DiRecT 0 to 0, 1.0 and 1.0; Gradient Guidance 13.0 to 21.7, 0.2 and 0.1; Classifier Guidance 27.8 to 64.4, 0.1 and 0.0; Projected Diffusion 38.5 to 83.2, 0.4 and 0.1; Diffuser 44.6 to 94.1, 0.0 and 0.0; Primal-Dual 30.6 to 125.9, 0.0 and 0.0; Augmented Lagrangian 9.6 to 222.2, 0.5 and 0.0; SafeDiffuser-ReS 9.8 to 223.8, 0.4 and 0.1; SafeDiffuser-RoS 59.9 to 258.2, 0.0 and 0.0; SafeDiffuser-TVS 42.4 to 266.3, 0.4 and 0.0."></svg></div><figcaption>What narrowing the maze does to each method: keep-out violations per executed run go from the Broad setting (open circle) to Narrow (filled), and success rate is shown on the right. Means over 10 episodes; GlobMP is deterministic. Only DiRecT and GlobMP stay at zero in both.</figcaption></figure>
-
-<h2 id="dataset">Dataset</h2>
-    <p class="lead">Teleoperated demonstrations with fingertip touch</p>
-    <p>The expert policies we steer are trained on teleoperated demonstrations collected on a bimanual <strong>Dexmate Vega-1</strong> with two 7-DoF arms and two 12-DoF <strong>XHAND1</strong> dexterous hands with fingertip tactile sensing. Perception combines a head ZED X Mini stereo camera with two wrist cameras; teleoperation uses <strong>Manus gloves</strong> for the fingers and <strong>HTC VIVE trackers</strong> for the wrists. Each episode records, at 30&nbsp;Hz, three RGB streams, both arms and hands (measured and commanded), wrist and end-effector poses, and per-fingertip touch: a 3-axis force, a 120-taxel array and the sensor temperature for all ten fingertips.</p>
-    <div class="stats">
-      <div class="stat"><b id="ds-hours">&nbsp;</b><span>Teleoperated Demonstrations</span></div>
-      <div class="stat"><b id="ds-eps">&nbsp;</b><span id="ds-eps-l">Released Episodes</span></div>
-      <div class="stat"><b id="ds-tasks">&nbsp;</b><span id="ds-tasks-l">Manipulation Tasks</span></div>
-      <div class="stat"><b id="ds-tact">&nbsp;</b><span>Tactile Modalities</span></div>
-    </div>
-    <figure>
-      <div class="charts">
-        <div class="card anim" id="ds-pie-card"><div class="pie-wrap"><svg id="ds-pie" viewBox="0 0 260 260" role="img" aria-label="Share of demonstration time per task category"></svg><div class="legend" id="ds-pie-legend"></div></div></div>
-        <div class="card anim" id="ds-min-card"><svg id="ds-min" viewBox="0 0 520 300" role="img" aria-label="Minutes of demonstrations per task"></svg></div>
-        <div class="card full anim" id="ds-ses-card"><svg id="ds-ses" viewBox="0 0 960 250" role="img" aria-label="Released episodes per task, grouped by task category"></svg></div>
-      </div>
-      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Bottom: released episodes per task, grouped by category. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
-    </figure>
-    <h3 id="dataset-explore">Explore the dataset</h3>
-    <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
-    <div class="wall" id="wall" aria-label="Recorded episodes, one per task"></div>
 
 <h2 id="code">Quick Start</h2>
     <p class="lead">Code on GitHub and Hugging Face</p>

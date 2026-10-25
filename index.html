@@ -358,7 +358,7 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
         <div class="card anim" id="ds-pie-card"><div class="pie-wrap"><svg id="ds-pie" viewBox="0 0 260 260" role="img" aria-label="Share of demonstration time per task category"></svg><div class="legend" id="ds-pie-legend"></div></div></div>
         <div class="card anim" id="ds-min-card"><svg id="ds-min" viewBox="0 0 520 300" role="img" aria-label="Minutes of demonstrations per task"></svg></div>
       </div>
-      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: minutes of demonstrations per task. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
+      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: recording time per task; every task has the same number of episodes, but episodes differ in length. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
     </figure>
     <h4 id="dataset-explore">Explore the dataset</h4>
     <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
@@ -743,6 +743,8 @@ function draw(D){
  (function(){var svg=document.getElementById('ds-min'),L=44,B=200,W=460,H=180,mx=nice(Math.max.apply(null,TASKS.map(function(t){return t[3]}))),st=mx/4;
   for(var v=0;v<=mx+1e-9;v+=st){var y=B-H*v/mx;el('line',{x1:L,x2:L+W,y1:y,y2:y,stroke:'#1a171418'},svg);txt(svg,L-6,y+4,+v.toFixed(0),{'text-anchor':'end','font-size':11,fill:'#1a171499'})}
   txt(svg,12,B-H/2,'Minutes',{transform:'rotate(-90 12 '+(B-H/2)+')','text-anchor':'middle','font-size':12,fill:'#1a171499'});
+  // the episode count is the same for every task, so the title states it once; the bars are recording time
+  var ne=TASKS.map(function(t){return t[2]});txt(svg,L,12,'Recording time per task'+(ne.every(function(v){return v===ne[0]})?', '+ne[0]+' episodes each':''),{'font-size':13,'font-weight':600});
   var bw=Math.min(W/TASKS.length,90),x0=L+(W-bw*TASKS.length)/2;TASKS.forEach(function(t,i){var h=H*t[3]/mx,x=x0+i*bw+5,g=el('g',{'data-cat':t[1]},svg);
    el('rect',{x:x,y:B-h,width:bw-10,height:h,rx:3,fill:CAT[t[1]][1],class:'grow',style:'--d:'+(i*0.06)+'s'},g);
    txt(g,x+(bw-10)/2,B-h-5,t[3].toFixed(1),{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.06)+'s'});

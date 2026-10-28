@@ -269,6 +269,8 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
 .fp-legend i{display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:6px;vertical-align:3px}
 .fp-legend i.band{height:10px;width:16px;vertical-align:-1px;opacity:.35;background:var(--ink)}
 .fp-hands{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.fp-block{margin-top:10px}.fp-block+.fp-block{margin-top:22px;padding-top:12px;border-top:1px solid var(--line)}
+.fp-block h6{margin:0;font-size:15px;font-weight:600}.fp-block h6 small{font-weight:400;font-size:13px;color:var(--muted);margin-left:8px}
 .fp-hand h5{margin:6px 0 2px;font-size:14px;font-weight:600}
 .fp-hand svg{display:block;width:100%;height:auto;overflow:visible}
 .fp-hand svg text{font-family:var(--serif);fill:var(--ink)}
@@ -376,13 +378,10 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
       <div class="fp" id="ds-force" aria-live="polite">
         <div class="fp-head"><span class="fp-title" id="fp-title">Fingertip force</span><span class="fp-sub" id="fp-sub"></span></div>
         <div class="fp-legend" id="fp-legend"></div>
-        <div class="fp-hands">
-          <div class="fp-hand"><h5>Left hand</h5><div id="fp-left"></div></div>
-          <div class="fp-hand"><h5>Right hand</h5><div id="fp-right"></div></div>
-        </div>
-        <div class="fp-hint" id="fp-hint">Hover a bar for one task, or a slice for a whole category.</div>
+        <div id="fp-blocks"></div>
+        <div class="fp-hint" id="fp-hint">Hover a bar for one task, or a slice for every task in that category.</div>
       </div>
-      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: recording time per task; every task has the same number of episodes, but episodes differ in length. Bottom: fingertip force of every episode of the hovered task (bar) or category (slice), one row per finger, lined up on the moment the hand closes on the object; the bold line is the median and the shaded band the middle half of episodes. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
+      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: recording time per task; every task has the same number of episodes, but episodes differ in length. Bottom: fingertip force of every episode of the hovered task (bar), or of each task in the hovered category (slice), one row per finger, lined up on the moment the hand closes on the object; the bold line is the median and the shaded band the middle half of episodes. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
     </figure>
     <h4 id="dataset-explore">Explore the dataset</h4>
     <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
@@ -819,19 +818,22 @@ function draw(D){
    var yb=TOP+5*RH+4*GAP;for(var t=Math.ceil(t0/2)*2;t<=t1+1e-9;t+=2){el('line',{x1:X(t),x2:X(t),y1:yb,y2:yb+4,stroke:'#1a171466'},svg);
     txt(svg,X(t),yb+16,(t>0?'+':'')+t+' s',{'text-anchor':'middle','font-size':10,fill:'#1a171499'})}
    svg.setAttribute('aria-label',label+': fingertip force per finger, '+h.n+' episodes, aligned on grasp start')}
-  function show(kind,key){if(!key)return;want=[kind,key];if(!FD){load();return}var id=kind+':'+key;if(id===cur)return;
-   var o=kind==='task'?FD.tasks[key]:FD.categories[key];cur=id;
-   if(!o){var tk=tasks.filter(function(t){return t.folder===key})[0];
-    document.getElementById('fp-title').textContent='Fingertip force, '+(kind==='task'?(tk?nm(tk):key):key);
-    document.getElementById('fp-sub').textContent='Force data for this '+(kind==='task'?'task':'category')+' is being added.';
-    hand(document.getElementById('fp-left'),null,'Coming soon');hand(document.getElementById('fp-right'),null,'Coming soon');return}
-   if(kind!=='task')['left','right'].forEach(function(sd){var h=o.hands[sd];if(h&&!h.idle&&!h.traces){h.traces=[];
-    (o.folders||[]).forEach(function(f){var th=FD.tasks[f]&&FD.tasks[f].hands[sd];if(th&&th.traces)h.traces=h.traces.concat(th.traces)})}});
-   var nL=o.hands.left&&o.hands.left.n,nR=o.hands.right&&o.hands.right.n;
-   document.getElementById('fp-title').textContent='Fingertip force, '+(kind==='task'?o.name:key+(o.tasks.length>1?' ('+o.tasks.join(', ')+')':''));
-   document.getElementById('fp-sub').textContent=o.episodes+' episodes · time from the moment each hand closes on the object · force 0–'+FD.top+' (sensor counts, same on every task; higher peaks clipped)';
-   hand(document.getElementById('fp-left'),o.hands.left,kind==='task'?'Left hand: not used in this task':'Left hand: no grasp');
-   hand(document.getElementById('fp-right'),o.hands.right,kind==='task'?'Right hand: not used in this task':'Right hand: no grasp')}
+  // one block per task: a bar shows its task, a slice shows each task of its category, stacked
+  function block(host,folder,several){var t=FD.tasks[folder],tk=tasks.filter(function(x){return x.folder===folder})[0],name=t?t.name:(tk?nm(tk):folder);
+   var b=document.createElement('div');b.className='fp-block';
+   if(several){var h=document.createElement('h6');h.textContent=name;var sm=document.createElement('small');sm.textContent=t?t.episodes+' episodes':'force data being added';h.appendChild(sm);b.appendChild(h)}
+   var g=document.createElement('div');g.className='fp-hands';b.appendChild(g);host.appendChild(b);
+   ['left','right'].forEach(function(sd){var c=document.createElement('div');c.className='fp-hand';var h5=document.createElement('h5');h5.textContent=sd==='left'?'Left hand':'Right hand';c.appendChild(h5);
+    var d=document.createElement('div');c.appendChild(d);g.appendChild(c);
+    hand(d,t&&t.hands[sd],!t?'Coming soon':(sd==='left'?'Left':'Right')+' hand: not used in this task')})}
+  function show(kind,key){if(!key)return;want=[kind,key];if(!FD){load();return}var id=kind+':'+key;if(id===cur)return;cur=id;
+   var folders=kind==='task'?[key]:tasks.filter(function(t){return t.category===key}).map(function(t){return t.folder});
+   var have=folders.filter(function(f){return FD.tasks[f]}),eps=have.reduce(function(a,f){return a+FD.tasks[f].episodes},0);
+   var first=FD.tasks[folders[0]],tk0=tasks.filter(function(x){return x.folder===folders[0]})[0];
+   document.getElementById('fp-title').textContent='Fingertip force, '+(kind==='task'?(first?first.name:(tk0?nm(tk0):key)):key+(folders.length>1?', '+folders.length+' tasks':''));
+   document.getElementById('fp-sub').textContent=(have.length?eps+' episodes · ':'Force data for this '+(kind==='task'?'task':'category')+' is being added · ')+
+    'time from the moment each hand closes on the object · force 0–'+FD.top+' (sensor counts, same on every task; higher peaks clipped)';
+   var host=document.getElementById('fp-blocks');host.innerHTML='';folders.forEach(function(f){block(host,f,folders.length>1)})}
   var svgMin=document.getElementById('ds-min'),svgPie=document.getElementById('ds-pie');
   [].forEach.call(svgMin.querySelectorAll('[data-task]'),function(g){function f(){show('task',g.getAttribute('data-task'))}g.addEventListener('mouseenter',f);g.addEventListener('click',f)});
   [].forEach.call(svgPie.querySelectorAll('.slice[data-cat]'),function(g){function f(){show('cat',CAT[g.getAttribute('data-cat')][0])}g.addEventListener('mouseenter',f);g.addEventListener('click',f)});

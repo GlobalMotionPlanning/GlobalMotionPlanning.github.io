@@ -260,6 +260,21 @@ h3+.lead,h4+.lead{margin-top:6px}
 #mz-db text{font-family:var(--serif)}
 h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:1.2;scroll-margin-top:32px}
 .outline a.sub2{padding-left:24px;font-size:12.5px}
+/* fingertip-force panel under the dataset charts: follows the hovered bar (task) or slice (category) */
+.fp{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.fp-head{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:6px 18px}
+.fp-title{font-size:17px;font-weight:600}
+.fp-sub{font-size:13px;color:var(--muted)}
+.fp-legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted);margin:8px 0 4px}
+.fp-legend i{display:inline-block;width:16px;height:3px;border-radius:2px;margin-right:6px;vertical-align:3px}
+.fp-legend i.band{height:10px;width:16px;vertical-align:-1px;opacity:.35;background:var(--ink)}
+.fp-hands{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.fp-hand h5{margin:6px 0 2px;font-size:14px;font-weight:600}
+.fp-hand svg{display:block;width:100%;height:auto;overflow:visible}
+.fp-hand svg text{font-family:var(--serif);fill:var(--ink)}
+.fp-idle{display:flex;align-items:center;justify-content:center;min-height:180px;color:var(--muted);font-size:14px;border:1px dashed var(--line-strong);border-radius:6px}
+.fp-hint{font-size:13px;color:var(--muted);margin-top:6px}
+@media (max-width:760px){.fp-hands{grid-template-columns:1fr}}
 .charts [data-cat]{transition:opacity .18s}.charts [data-cat] text{transition:font-weight .1s}
 .charts.ds-hl [data-cat]:not(.on){opacity:.22}.charts.ds-hl g.on text{font-weight:700}.charts.ds-hl .legend .on{font-weight:700;color:var(--ink)}
 .charts .legend div,.charts g[data-cat]{cursor:pointer}
@@ -358,7 +373,16 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
         <div class="card anim" id="ds-pie-card"><div class="pie-wrap"><svg id="ds-pie" viewBox="0 0 260 260" role="img" aria-label="Share of demonstration time per task category"></svg><div class="legend" id="ds-pie-legend"></div></div></div>
         <div class="card anim" id="ds-min-card"><svg id="ds-min" viewBox="0 0 520 300" role="img" aria-label="Minutes of demonstrations per task"></svg></div>
       </div>
-      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: recording time per task; every task has the same number of episodes, but episodes differ in length. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
+      <div class="fp" id="ds-force" aria-live="polite">
+        <div class="fp-head"><span class="fp-title" id="fp-title">Fingertip force</span><span class="fp-sub" id="fp-sub"></span></div>
+        <div class="fp-legend" id="fp-legend"></div>
+        <div class="fp-hands">
+          <div class="fp-hand"><h5>Left hand</h5><div id="fp-left"></div></div>
+          <div class="fp-hand"><h5>Right hand</h5><div id="fp-right"></div></div>
+        </div>
+        <div class="fp-hint" id="fp-hint">Hover a bar for one task, or a slice for a whole category.</div>
+      </div>
+      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: recording time per task; every task has the same number of episodes, but episodes differ in length. Bottom: fingertip force of every episode of the hovered task (bar) or category (slice), one row per finger, lined up on the moment the hand closes on the object; the bold line is the median and the shaded band the middle half of episodes. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
     </figure>
     <h4 id="dataset-explore">Explore the dataset</h4>
     <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
@@ -721,7 +745,7 @@ function draw(D){
  function key(c){return 'c'+cats.indexOf(c)}
  var tasks=D.tasks.slice().sort(function(a,b){return cats.indexOf(a.category)-cats.indexOf(b.category)||(a.recorded[0]<b.recorded[0]?-1:1)});
  function nm(t){return t.name||t.motion+(t.object?' / '+t.object:'')}
- var TASKS=tasks.map(function(t){return [nm(t),key(t.category),t.episodes,t.minutes]});
+ var TASKS=tasks.map(function(t){return [nm(t),key(t.category),t.episodes,t.minutes,t.folder]});
  var S=tasks.map(function(t){return [key(t.category),nm(t),t.recorded.map(short).join(', '),t.episodes]});
  var all=[];tasks.forEach(function(t){all=all.concat(t.recorded)});all.sort();
  // stat cards and caption
@@ -745,7 +769,7 @@ function draw(D){
   txt(svg,12,B-H/2,'Minutes',{transform:'rotate(-90 12 '+(B-H/2)+')','text-anchor':'middle','font-size':12,fill:'#1a171499'});
   // the episode count is the same for every task, so the title states it once; the bars are recording time
   var ne=TASKS.map(function(t){return t[2]});txt(svg,L,12,'Recording time per task'+(ne.every(function(v){return v===ne[0]})?', '+ne[0]+' episodes each':''),{'font-size':13,'font-weight':600});
-  var bw=Math.min(W/TASKS.length,90),x0=L+(W-bw*TASKS.length)/2;TASKS.forEach(function(t,i){var h=H*t[3]/mx,x=x0+i*bw+5,g=el('g',{'data-cat':t[1]},svg);
+  var bw=Math.min(W/TASKS.length,90),x0=L+(W-bw*TASKS.length)/2;TASKS.forEach(function(t,i){var h=H*t[3]/mx,x=x0+i*bw+5,g=el('g',{'data-cat':t[1],'data-task':t[4]},svg);
    el('rect',{x:x,y:B-h,width:bw-10,height:h,rx:3,fill:CAT[t[1]][1],class:'grow',style:'--d:'+(i*0.06)+'s'},g);
    txt(g,x+(bw-10)/2,B-h-5,t[3].toFixed(1),{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.06)+'s'});
    tip(g,t[0]+': '+t[3]+' min, '+t[2]+' episodes');
@@ -764,6 +788,59 @@ function draw(D){
  (function(){var F=document.querySelector('#dataset ~ figure .charts');if(!F)return;
   function hl(k){F.classList.toggle('ds-hl',!!k);[].forEach.call(F.querySelectorAll('[data-cat]'),function(e){e.classList.toggle('on',e.getAttribute('data-cat')===k)})}
   [].forEach.call(F.querySelectorAll('[data-cat]'),function(e){e.addEventListener('mouseenter',function(){hl(e.getAttribute('data-cat'))});e.addEventListener('mouseleave',function(){hl(null)})});})();
+ /* fingertip-force panel under the charts: follows the hovered bar (one task) or slice (one category).
+    Data: project_page/data/forces.json, built from the released .h5 files (median, middle half and every
+    episode's trace per finger, aligned on the hand's grasp start); fetched when the section comes near. */
+ (function(){var box=document.getElementById('ds-force');if(!box)return;
+  var FC=['#2a4fa8','#c97b63','#6f9e8a','#c98a2b','#b48ead'],FD=null,cur=null,want=['task',tasks[0]&&tasks[0].folder];
+  var FN=['Thumb','Index','Middle','Ring','Pinky'];
+  document.getElementById('fp-legend').innerHTML=FN.map(function(f,i){return '<span><i style="background:'+FC[i]+'"></i>'+f+'</span>'}).join('')+
+   '<span><i class="band"></i>middle half of episodes</span><span>bold line: median</span><span>faint lines: single episodes</span>';
+  function hand(host,h,label){host.innerHTML='';
+   if(!h||h.idle||!h.med){var d=document.createElement('div');d.className='fp-idle';d.textContent=label;host.appendChild(d);return}
+   var L=46,R=6,TOP=4,RH=66,GAP=8,W=420,H=TOP+5*RH+4*GAP+26,iw=W-L-R,t0=FD.t0,t1=FD.t1,top=FD.top;
+   var svg=el('svg',{viewBox:'0 0 '+W+' '+H,role:'img'},host);
+   function X(t){return L+(t-t0)/(t1-t0)*iw}
+   for(var k=0;k<5;k++){var y0=TOP+k*(RH+GAP),Y=function(v){return y0+RH-Math.min(v,top)/top*RH};
+    el('line',{x1:L,x2:L+iw,y1:y0+RH,y2:y0+RH,stroke:'#1a171447'},svg);el('line',{x1:L,x2:L+iw,y1:y0,y2:y0,stroke:'#1a171412'},svg);
+    el('line',{x1:L,x2:L+iw,y1:Y(FD.thr),y2:Y(FD.thr),stroke:'#1a171466','stroke-dasharray':'3 3'},svg);
+    txt(svg,L-6,y0+RH+3,'0',{'text-anchor':'end','font-size':10,fill:'#1a171499'});txt(svg,L-6,y0+8,top,{'text-anchor':'end','font-size':10,fill:'#1a171499'});
+    txt(svg,L+4,y0+11,FN[k],{'font-size':11,'font-weight':600,fill:'#1a1714b3'});
+    el('line',{x1:X(0),x2:X(0),y1:y0,y2:y0+RH,stroke:'#2a4fa855'},svg);
+    var g=el('g',{fill:'none',stroke:FC[k],'stroke-width':.8,'stroke-opacity':Math.max(.05,Math.min(.35,8/h.traces.length))},svg);
+    h.traces.forEach(function(tr){var d='',pen=false;tr[k].forEach(function(v,i){if(v===null){pen=false;return}
+     d+=(pen?'L':'M')+X(t0+i/FD.trace_hz).toFixed(1)+' '+Y(v).toFixed(1);pen=true});if(d)el('path',{d:d},g)});
+    var q1=h.q1[k],q3=h.q3[k],md=h.med[k],run=[],runs=[];
+    md.forEach(function(v,i){if(v===null){if(run.length)runs.push(run);run=[]}else run.push(i)});if(run.length)runs.push(run);
+    runs.forEach(function(rn){var up=rn.map(function(i){return X(t0+i/FD.hz).toFixed(1)+' '+Y(q3[i]).toFixed(1)}),
+      dn=rn.slice().reverse().map(function(i){return X(t0+i/FD.hz).toFixed(1)+' '+Y(q1[i]).toFixed(1)});
+     el('path',{d:'M'+up.join('L')+'L'+dn.join('L')+'Z',fill:FC[k],'fill-opacity':.28,stroke:'none'},svg);
+     el('path',{d:'M'+rn.map(function(i){return X(t0+i/FD.hz).toFixed(1)+' '+Y(md[i]).toFixed(1)}).join('L'),fill:'none',stroke:FC[k],'stroke-width':2,'stroke-linejoin':'round'},svg)})}
+   var yb=TOP+5*RH+4*GAP;for(var t=Math.ceil(t0/2)*2;t<=t1+1e-9;t+=2){el('line',{x1:X(t),x2:X(t),y1:yb,y2:yb+4,stroke:'#1a171466'},svg);
+    txt(svg,X(t),yb+16,(t>0?'+':'')+t+' s',{'text-anchor':'middle','font-size':10,fill:'#1a171499'})}
+   svg.setAttribute('aria-label',label+': fingertip force per finger, '+h.n+' episodes, aligned on grasp start')}
+  function show(kind,key){if(!key)return;want=[kind,key];if(!FD){load();return}var id=kind+':'+key;if(id===cur)return;
+   var o=kind==='task'?FD.tasks[key]:FD.categories[key];cur=id;
+   if(!o){var tk=tasks.filter(function(t){return t.folder===key})[0];
+    document.getElementById('fp-title').textContent='Fingertip force, '+(kind==='task'?(tk?nm(tk):key):key);
+    document.getElementById('fp-sub').textContent='Force data for this '+(kind==='task'?'task':'category')+' is being added.';
+    hand(document.getElementById('fp-left'),null,'Coming soon');hand(document.getElementById('fp-right'),null,'Coming soon');return}
+   if(kind!=='task')['left','right'].forEach(function(sd){var h=o.hands[sd];if(h&&!h.idle&&!h.traces){h.traces=[];
+    (o.folders||[]).forEach(function(f){var th=FD.tasks[f]&&FD.tasks[f].hands[sd];if(th&&th.traces)h.traces=h.traces.concat(th.traces)})}});
+   var nL=o.hands.left&&o.hands.left.n,nR=o.hands.right&&o.hands.right.n;
+   document.getElementById('fp-title').textContent='Fingertip force, '+(kind==='task'?o.name:key+(o.tasks.length>1?' ('+o.tasks.join(', ')+')':''));
+   document.getElementById('fp-sub').textContent=o.episodes+' episodes · time from the moment each hand closes on the object · force 0–'+FD.top+' (sensor counts, same on every task; higher peaks clipped)';
+   hand(document.getElementById('fp-left'),o.hands.left,kind==='task'?'Left hand: not used in this task':'Left hand: no grasp');
+   hand(document.getElementById('fp-right'),o.hands.right,kind==='task'?'Right hand: not used in this task':'Right hand: no grasp')}
+  var svgMin=document.getElementById('ds-min'),svgPie=document.getElementById('ds-pie');
+  [].forEach.call(svgMin.querySelectorAll('[data-task]'),function(g){function f(){show('task',g.getAttribute('data-task'))}g.addEventListener('mouseenter',f);g.addEventListener('click',f)});
+  [].forEach.call(svgPie.querySelectorAll('.slice[data-cat]'),function(g){function f(){show('cat',CAT[g.getAttribute('data-cat')][0])}g.addEventListener('mouseenter',f);g.addEventListener('click',f)});
+  var asked=false;function load(){if(asked)return;asked=true;
+   fetch('project_page/data/forces.json').then(function(r){if(!r.ok)throw r.status;return r.json()}).then(function(d){FD=d;var ok=want[0]==='task'?d.tasks[want[1]]:d.categories[want[1]];
+    if(!ok){var f=tasks.filter(function(t){return d.tasks[t.folder]})[0];if(f)want=['task',f.folder]}show(want[0],want[1])})
+   .catch(function(){document.getElementById('fp-hint').textContent='Fingertip force data could not be loaded.'})}
+  if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){if(es.some(function(e){return e.isIntersecting})){io.disconnect();load()}},{rootMargin:'600px'});io.observe(box)}else load();
+ })();
  /* wall: recorded tasks play one head-camera episode, the rest of the planned tasks are coming soon */
  (function(){var W=document.getElementById('wall');if(!W)return;W.innerHTML='';
   var L=tasks.map(function(t){var c=CLIP[t.folder];return [nm(t),'',c?c[1]:t.episodes+' episodes',c?c[0]:null]});

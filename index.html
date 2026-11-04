@@ -363,10 +363,10 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
 
 <h4 id="dataset">Dataset</h4>
     <p class="lead">Teleoperated demonstrations with fingertip touch</p>
-    <p>The expert policies we steer are trained on teleoperated demonstrations collected on a bimanual <strong>Dexmate Vega-1</strong> with two 7-DoF arms and two 12-DoF <strong>XHAND1</strong> dexterous hands with fingertip tactile sensing. Perception combines a head ZED X Mini stereo camera with two wrist cameras; teleoperation uses <strong>Manus gloves</strong> for the fingers and <strong>HTC VIVE trackers</strong> for the wrists. Each episode records, at 30&nbsp;Hz, three RGB streams, both arms and hands (measured and commanded), wrist and end-effector poses, and per-fingertip touch: a 3-axis force, a 120-taxel array and the sensor temperature for all ten fingertips.</p>
+    <p>The expert policies we steer are trained on teleoperated demonstrations collected on a bimanual <strong>Dexmate Vega-1</strong> with two 7-DoF arms and two 12-DoF <strong>XHAND1</strong> dexterous hands with fingertip tactile sensing. Perception combines a head ZED X Mini stereo camera with two wrist cameras; teleoperation uses <strong>MANUS Metagloves</strong> for the fingers and <strong>HTC VIVE trackers</strong> for the wrists. Each episode records, at 30&nbsp;Hz, four RGB streams (the stereo head pair and both wrist cameras), both arms and hands (measured and commanded), wrist and end-effector poses, and per-fingertip touch: a 3-axis force, a 120-taxel array and the sensor temperature for all ten fingertips.</p>
     <div class="stats">
       <div class="stat"><b id="ds-hours">&nbsp;</b><span>Teleoperated Demonstrations</span></div>
-      <div class="stat"><b id="ds-eps">&nbsp;</b><span id="ds-eps-l">Released Episodes</span></div>
+      <div class="stat"><b id="ds-eps">&nbsp;</b><span id="ds-eps-l">Training Episodes</span></div>
       <div class="stat"><b id="ds-tasks">&nbsp;</b><span id="ds-tasks-l">Manipulation Tasks</span></div>
       <div class="stat"><b id="ds-tact">&nbsp;</b><span>Tactile Modalities</span></div>
     </div>
@@ -381,7 +381,7 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
         <div id="fp-blocks"></div>
         <div class="fp-hint" id="fp-hint">Hover a bar for one task, or a slice for every task in that category.</div>
       </div>
-      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: recording time per task; every task has the same number of episodes, but episodes differ in length. Bottom: fingertip force of every episode of the hovered task (bar), or of each task in the hovered category (slice), one row per finger, lined up on the moment the hand closes on the object; the bold line is the median and the shaded band the middle half of episodes. Each task releases its best 100 successful episodes with randomized object positions, recorded <span id="ds-span">September 28 to October 19, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
+      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: recording time per task; episodes differ in length. Bottom: fingertip force of every training episode of the hovered task (bar), or of each task in the hovered category (slice), one row per finger, lined up on the moment the hand closes on the object; the bold line is the median and the shaded band the middle half of episodes. Each task releases 100 successful training episodes (200 for Toy by weight) with randomized object positions, recorded <span id="ds-span">September 28 to October 30, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
     </figure>
     <h4 id="dataset-explore">Explore the dataset</h4>
     <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
@@ -714,23 +714,26 @@ function el(t,a,p){var e=document.createElementNS(NS,t);for(var k in a)e.setAttr
 function txt(p,x,y,s,a){var t=el('text',Object.assign({x:x,y:y},a||{}),p);t.textContent=s;return t}
 function tip(g,s){var t=el('title',{},g);t.textContent=s}
 if(!document.getElementById('ds-pie'))return;
-/* Everything in this section is drawn from the stats.json published with the data on Hugging Face
-   (written by applications/steering/xhand_dataprocessing/make_stats.py), so re-uploading the data and that
-   file updates the page. FALLBACK is the same file as of 2026-10-23, used only if the fetch fails. */
-var STATS='https://huggingface.co/GlobalMotionPlanning/GlobMP/resolve/main/applications/steering/xhand_data/stats.json';
-var FALLBACK={planned_tasks:12,tactile_modalities:3,episodes:600,hours:2.81,tasks:[
- {folder:'toy_shelf_random_0928',name:'Toy pick-and-place',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:100,minutes:30.2,recorded:['2026-09-28']},
- {folder:'mug_backpack_random_1006_1014',name:'Mug into backpack',motion:'Grasp, lift, insert',object:'mug',category:'Grasp, lift & insert',episodes:100,minutes:29.1,recorded:['2026-10-06','2026-10-14']},
- {folder:'bag_box_1019',name:'Bag into box',motion:'Grasp, lift, insert',object:'bag',category:'Grasp, lift & insert',episodes:100,minutes:37.7,recorded:['2026-10-18','2026-10-19']},
- {folder:'handover_random_1007',name:'Tissue-box handover',motion:'Handover',object:'box',category:'Handover',episodes:100,minutes:32.0,recorded:['2026-10-07']},
- {folder:'tissue_random_1009',name:'Pull a tissue',motion:'Extract',object:'tissue',category:'Extract',episodes:100,minutes:18.0,recorded:['2026-10-09']},
- {folder:'pick_cup_full_empty_random_1014',name:'Heavy-light cup',motion:'Grasp & lift',object:'cup',category:'Grasp & lift',episodes:100,minutes:21.7,recorded:['2026-10-14']}]};
+/* Everything in this section is drawn from project_page/data/dataset.json: the stats.json schema of the
+   Hugging Face release (applications/steering/xhand_data), counted over the TRAINING episodes of each task's
+   splits.json. forces.json is built from the same episodes. FALLBACK is the same file as of 2026-11-04, used only if
+   the fetch fails. */
+var STATS='project_page/data/dataset.json';
+var FALLBACK={planned_tasks:12,tactile_modalities:3,episodes:800,hours:4.1,tasks:[
+ {folder:'extract_tissue',name:'Pull a tissue',motion:'Extract',object:'tissue',category:'Extract',episodes:100,minutes:18.0,recorded:['2026-10-09']},
+ {folder:'handover_tissue_box_shelf_to_shelf',name:'Tissue-box handover',motion:'Handover',object:'box',category:'Handover',episodes:100,minutes:31.8,recorded:['2026-10-07']},
+ {folder:'pick_bag_place_box',name:'Bag into box',motion:'Grasp, lift, insert',object:'bag',category:'Grasp, lift & insert',episodes:100,minutes:38.5,recorded:['2026-10-18','2026-10-19']},
+ {folder:'pick_cup_full_empty',name:'Heavy-light cup',motion:'Grasp & lift',object:'cup',category:'Grasp & lift',episodes:100,minutes:21.7,recorded:['2026-10-14']},
+ {folder:'put_mug_in_backpack',name:'Mug into backpack',motion:'Grasp, lift, insert',object:'mug',category:'Grasp, lift & insert',episodes:100,minutes:29.5,recorded:['2026-10-06','2026-10-14']},
+ {folder:'sort_toy_by_weight',name:'Toy by weight',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:200,minutes:75.8,recorded:['2026-10-23','2026-10-26','2026-10-27','2026-10-28','2026-10-29','2026-10-30']},
+ {folder:'toy_shelf',name:'Toy pick-and-place',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:100,minutes:30.4,recorded:['2026-09-28']}]};
 // category colours in a fixed order; a new category takes the next spare colour
 var CATCOL={'Grasp, lift & insert':'#c97b63','Handover':'#6f9e8a','Extract':'#a8936a','Grasp & lift':'#b48ead'},SPARE=['#7a8f4e','#8d8679','#5d5750','#d3cdc0'];
 // head-camera clip and one-line description per task folder; a folder without one shows a "recorded" tile
-var CLIP={toy_shelf_random_0928:['toy.mp4','put the toy on the shelf'],mug_backpack_random_1006_1014:['mug.mp4','put the mug in the backpack'],
- handover_random_1007:['handover.mp4','hand the tissue box over'],bag_box_1019:['bag.mp4','lift a light or heavy bag into a box'],
- pick_cup_full_empty_random_1014:['cup.mp4','pick a full or an empty cup'],tissue_random_1009:['tissue.mp4','pull a tissue']};
+var CLIP={toy_shelf:['toy.mp4','put the toy on the shelf'],put_mug_in_backpack:['mug.mp4','put the mug in the backpack'],
+ handover_tissue_box_shelf_to_shelf:['handover.mp4','hand the tissue box over'],pick_bag_place_box:['bag.mp4','lift a light or heavy bag into a box'],
+ pick_cup_full_empty:['cup.mp4','pick a full or an empty cup'],extract_tissue:['tissue.mp4','pull a tissue'],
+ sort_toy_by_weight:['toy_weight.mp4','put the toy in the box that matches its weight']};
 var MON=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],MONL=['January','February','March','April','May','June','July','August','September','October','November','December'];
 function short(d){return MON[+d.slice(5,7)-1]+' '+(+d.slice(8))}
 function long(d){return MONL[+d.slice(5,7)-1]+' '+(+d.slice(8))}
@@ -750,7 +753,7 @@ function draw(D){
  // stat cards and caption
  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v}
  set('ds-hours',D.hours.toFixed(1)+'h');set('ds-eps',D.episodes);
- var per=tasks.every(function(t){return t.episodes===tasks[0].episodes});set('ds-eps-l','Released Episodes'+(per?', '+tasks[0].episodes+' per Task':''));
+ var per=tasks.every(function(t){return t.episodes===tasks[0].episodes});set('ds-eps-l','Training Episodes'+(per?', '+tasks[0].episodes+' per Task':''));
  set('ds-tasks',D.planned_tasks);set('ds-tasks-l','Manipulation Tasks, '+tasks.length+' recorded so far');set('ds-tact',D.tactile_modalities);
  if(all.length)set('ds-span',long(all[0])+' to '+long(all[all.length-1])+', '+all[all.length-1].slice(0,4));
  ['ds-pie','ds-min'].forEach(function(id){document.getElementById(id).innerHTML=''});document.getElementById('ds-pie-legend').innerHTML='';
@@ -771,7 +774,7 @@ function draw(D){
   var bw=Math.min(W/TASKS.length,90),x0=L+(W-bw*TASKS.length)/2;TASKS.forEach(function(t,i){var h=H*t[3]/mx,x=x0+i*bw+5,g=el('g',{'data-cat':t[1],'data-task':t[4]},svg);
    el('rect',{x:x,y:B-h,width:bw-10,height:h,rx:3,fill:CAT[t[1]][1],class:'grow',style:'--d:'+(i*0.06)+'s'},g);
    txt(g,x+(bw-10)/2,B-h-5,t[3].toFixed(1),{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.06)+'s'});
-   tip(g,t[0]+': '+t[3]+' min, '+t[2]+' episodes');
+   tip(g,t[0]+': '+t[3]+' min, '+t[2]+' training episodes');
    txt(g,x+(bw-10)/2,B+10,t[0],{transform:'rotate(-30 '+(x+(bw-10)/2)+' '+(B+10)+')','text-anchor':'end','font-size':11.5,'font-style':'italic'})});})();
  (function(){var svg=document.getElementById('ds-ses');if(!svg)return;var L=48,B=195,W=900,H=150,mx=nice(Math.max.apply(null,S.map(function(s){return s[3]}))),st=mx/4,n=S.length,bw=Math.min(W/n,110),OX=L+(W-bw*n)/2;
   var start=0;for(var i=0;i<=n;i++){if(i==n||S[i][0]!=S[start][0]){var k=S[start][0];var gb=el('g',{'data-cat':k,class:'ds-band'},svg);el('rect',{x:OX+start*bw,y:B-H-22,width:(i-start)*bw,height:H+22,fill:CAT[k][1],'fill-opacity':.15},gb);
@@ -845,7 +848,7 @@ function draw(D){
  })();
  /* wall: recorded tasks play one head-camera episode, the rest of the planned tasks are coming soon */
  (function(){var W=document.getElementById('wall');if(!W)return;W.innerHTML='';
-  var L=tasks.map(function(t){var c=CLIP[t.folder];return [nm(t),'',c?c[1]:t.episodes+' episodes',c?c[0]:null]});
+  var L=tasks.map(function(t){var c=CLIP[t.folder];return [nm(t),'',c?c[1]:t.episodes+' training episodes',c?c[0]:null]});
   for(var i=L.length;i<Math.max(D.planned_tasks,L.length);i++)L.push(null);
   L.forEach(function(t){var d=document.createElement('div');d.className='tile';
    if(!t){d.className='tile todo';d.innerHTML='<b>Coming soon</b>';W.appendChild(d);return}

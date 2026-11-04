@@ -1,0 +1,101 @@
+{
+ "updated": "2026-11-04",
+ "split": "train",
+ "planned_tasks": 12,
+ "tactile_modalities": 3,
+ "episodes": 800,
+ "hours": 4.1,
+ "tasks": [
+  {
+   "folder": "extract_tissue",
+   "name": "Pull a tissue",
+   "motion": "Extract",
+   "object": "tissue",
+   "category": "Extract",
+   "episodes": 100,
+   "minutes": 18.0,
+   "recorded": [
+    "2026-10-09"
+   ]
+  },
+  {
+   "folder": "handover_tissue_box_shelf_to_shelf",
+   "name": "Tissue-box handover",
+   "motion": "Handover",
+   "object": "box",
+   "category": "Handover",
+   "episodes": 100,
+   "minutes": 31.8,
+   "recorded": [
+    "2026-10-07"
+   ]
+  },
+  {
+   "folder": "pick_bag_place_box",
+   "name": "Bag into box",
+   "motion": "Grasp, lift, insert",
+   "object": "bag",
+   "category": "Grasp, lift & insert",
+   "episodes": 100,
+   "minutes": 38.5,
+   "recorded": [
+    "2026-10-18",
+    "2026-10-19"
+   ]
+  },
+  {
+   "folder": "pick_cup_full_empty",
+   "name": "Heavy-light cup",
+   "motion": "Grasp & lift",
+   "object": "cup",
+   "category": "Grasp & lift",
+   "episodes": 100,
+   "minutes": 21.7,
+   "recorded": [
+    "2026-10-14"
+   ]
+  },
+  {
+   "folder": "put_mug_in_backpack",
+   "name": "Mug into backpack",
+   "motion": "Grasp, lift, insert",
+   "object": "mug",
+   "category": "Grasp, lift & insert",
+   "episodes": 100,
+   "minutes": 29.5,
+   "recorded": [
+    "2026-10-06",
+    "2026-10-14"
+   ]
+  },
+  {
+   "folder": "sort_toy_by_weight",
+   "name": "Toy by weight",
+   "motion": "Grasp, lift, insert",
+   "object": "toy",
+   "category": "Grasp, lift & insert",
+   "episodes": 200,
+   "minutes": 75.8,
+   "recorded": [
+    "2026-10-23",
+    "2026-10-26",
+    "2026-10-27",
+    "2026-10-28",
+    "2026-10-29",
+    "2026-10-30"
+   ]
+  },
+  {
+   "folder": "toy_shelf",
+   "name": "Toy pick-and-place",
+   "motion": "Grasp, lift, insert",
+   "object": "toy",
+   "category": "Grasp, lift & insert",
+   "episodes": 100,
+   "minutes": 30.4,
+   "recorded": [
+    "2026-09-28"
+   ]
+  }
+ ]
+}

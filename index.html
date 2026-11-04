@@ -372,16 +372,16 @@ h4{margin:34px 0 0;font-weight:400;font-size:clamp(20px,1.6vw,22px);line-height:
     </div>
     <figure>
       <div class="charts">
-        <div class="card anim" id="ds-pie-card"><div class="pie-wrap"><svg id="ds-pie" viewBox="0 0 260 260" role="img" aria-label="Share of demonstration time per task category"></svg><div class="legend" id="ds-pie-legend"></div></div></div>
+        <div class="card anim" id="ds-pie-card"><div class="pie-wrap"><svg id="ds-pie" viewBox="0 0 260 260" role="img" aria-label="Share of hand time per skill"></svg><div class="legend" id="ds-pie-legend"></div></div></div>
         <div class="card anim" id="ds-min-card"><svg id="ds-min" viewBox="0 0 520 300" role="img" aria-label="Minutes of demonstrations per task"></svg></div>
       </div>
       <div class="fp" id="ds-force" aria-live="polite">
         <div class="fp-head"><span class="fp-title" id="fp-title">Fingertip force</span><span class="fp-sub" id="fp-sub"></span></div>
         <div class="fp-legend" id="fp-legend"></div>
         <div id="fp-blocks"></div>
-        <div class="fp-hint" id="fp-hint">Hover a bar for one task, or a slice for every task in that category.</div>
+        <div class="fp-hint" id="fp-hint">Hover a bar for one task, or a slice for every task that uses that skill.</div>
       </div>
-      <figcaption>Dataset statistics. Top left: share of demonstration time per task category. Top right: recording time per task; episodes differ in length. Bottom: fingertip force of every training episode of the hovered task (bar), or of each task in the hovered category (slice), one row per finger, lined up on the moment the hand closes on the object; the bold line is the median and the shaded band the middle half of episodes. Each task releases 100 successful training episodes (200 for Toy by weight) with randomized object positions, recorded <span id="ds-span">September 28 to October 30, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
+      <figcaption>Dataset statistics. Top left: share of hand time per skill, measured in every episode from each hand's motion, closing and opening, and height (both hands add up; in Toy by weight and Heavy-light cup the lift, where the load is felt, counts as weight sensing). Top right: recording time per task, split by the share of each skill; episodes differ in length. Bottom: fingertip force of every training episode of the hovered task (bar), or of each task that uses the hovered skill (slice), one row per finger, lined up on the moment the hand closes on the object; the bold line is the median and the shaded band the middle half of episodes. Each task releases 100 successful training episodes (200 for Toy by weight) with randomized object positions, recorded <span id="ds-span">September 28 to October 30, 2026</span>, after checks for camera, tracker, timing and tactile faults; we will update these numbers as collection continues.</figcaption>
     </figure>
     <h4 id="dataset-explore">Explore the dataset</h4>
     <p>The recorded tasks, all with randomized object positions; each plays one episode from the head camera at real speed. More tasks are coming soon.</p>
@@ -719,16 +719,17 @@ if(!document.getElementById('ds-pie'))return;
    splits.json. forces.json is built from the same episodes. FALLBACK is the same file as of 2026-11-04, used only if
    the fetch fails. */
 var STATS='project_page/data/dataset.json';
-var FALLBACK={planned_tasks:12,tactile_modalities:3,episodes:800,hours:4.1,tasks:[
- {folder:'extract_tissue',name:'Pull a tissue',motion:'Extract',object:'tissue',category:'Extract',episodes:100,minutes:18.0,recorded:['2026-10-09']},
- {folder:'handover_tissue_box_shelf_to_shelf',name:'Tissue-box handover',motion:'Handover',object:'box',category:'Handover',episodes:100,minutes:31.8,recorded:['2026-10-07']},
- {folder:'pick_bag_place_box',name:'Bag into box',motion:'Grasp, lift, insert',object:'bag',category:'Grasp, lift & insert',episodes:100,minutes:38.5,recorded:['2026-10-18','2026-10-19']},
- {folder:'pick_cup_full_empty',name:'Heavy-light cup',motion:'Grasp & lift',object:'cup',category:'Grasp & lift',episodes:100,minutes:21.7,recorded:['2026-10-14']},
- {folder:'put_mug_in_backpack',name:'Mug into backpack',motion:'Grasp, lift, insert',object:'mug',category:'Grasp, lift & insert',episodes:100,minutes:29.5,recorded:['2026-10-06','2026-10-14']},
- {folder:'sort_toy_by_weight',name:'Toy by weight',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:200,minutes:75.8,recorded:['2026-10-23','2026-10-26','2026-10-27','2026-10-28','2026-10-29','2026-10-30']},
- {folder:'toy_shelf',name:'Toy pick-and-place',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:100,minutes:30.4,recorded:['2026-09-28']}]};
+var FALLBACK={planned_tasks:12,tactile_modalities:3,skills:['Grasp', 'Lift', 'Weight sensing', 'Place', 'Insert', 'Hold', 'Handover', 'Pull'],episodes:800,hours:4.1,tasks:[
+ {folder:'extract_tissue',name:'Pull a tissue',motion:'Extract',object:'tissue',category:'Extract',episodes:100,minutes:18.0,recorded:['2026-10-09'],skills:{'Hold': 17.02, 'Pull': 12.65}},
+ {folder:'handover_tissue_box_shelf_to_shelf',name:'Tissue-box handover',motion:'Handover',object:'box',category:'Handover',episodes:100,minutes:31.8,recorded:['2026-10-07'],skills:{'Grasp': 6.04, 'Lift': 9.6, 'Place': 10.26, 'Handover': 24.64}},
+ {folder:'pick_bag_place_box',name:'Bag into box',motion:'Grasp, lift, insert',object:'bag',category:'Grasp, lift & insert',episodes:100,minutes:38.5,recorded:['2026-10-18','2026-10-19'],skills:{'Grasp': 28.26, 'Lift': 11.01, 'Place': 35.41}},
+ {folder:'pick_cup_full_empty',name:'Heavy-light cup',motion:'Grasp & lift',object:'cup',category:'Grasp & lift',episodes:100,minutes:21.7,recorded:['2026-10-14'],skills:{'Grasp': 9.0, 'Weight sensing': 11.11}},
+ {folder:'put_mug_in_backpack',name:'Mug into backpack',motion:'Grasp, lift, insert',object:'mug',category:'Grasp, lift & insert',episodes:100,minutes:29.5,recorded:['2026-10-06','2026-10-14'],skills:{'Grasp': 8.57, 'Lift': 3.49, 'Insert': 8.16, 'Hold': 28.33}},
+ {folder:'sort_toy_by_weight',name:'Toy by weight',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:200,minutes:75.8,recorded:['2026-10-23','2026-10-26','2026-10-27','2026-10-28','2026-10-29','2026-10-30'],skills:{'Grasp': 45.11, 'Weight sensing': 14.25, 'Place': 65.88}},
+ {folder:'toy_shelf',name:'Toy pick-and-place',motion:'Grasp, lift, insert',object:'toy',category:'Grasp, lift & insert',episodes:100,minutes:30.4,recorded:['2026-09-28'],skills:{'Grasp': 9.28, 'Lift': 1.18, 'Place': 18.61}}]};
 // category colours in a fixed order; a new category takes the next spare colour
 var CATCOL={'Grasp, lift & insert':'#c97b63','Handover':'#6f9e8a','Extract':'#a8936a','Grasp & lift':'#b48ead'},SPARE=['#7a8f4e','#8d8679','#5d5750','#d3cdc0'];
+var SKILLCOL={'Grasp':'#c97b63','Lift':'#a8936a','Weight sensing':'#2a4fa8','Place':'#6f9e8a','Insert':'#7a8f4e','Hold':'#8d8679','Handover':'#b48ead','Pull':'#c98a2b'};
 // head-camera clip and one-line description per task folder; a folder without one shows a "recorded" tile
 var CLIP={toy_shelf:['toy.mp4','put the toy on the shelf'],put_mug_in_backpack:['mug.mp4','put the mug in the backpack'],
  handover_tissue_box_shelf_to_shelf:['handover.mp4','hand the tissue box over'],pick_bag_place_box:['bag.mp4','lift a light or heavy bag into a box'],
@@ -745,9 +746,13 @@ function draw(D){
  var known=Object.keys(CATCOL);cats.sort(function(a,b){var i=known.indexOf(a),j=known.indexOf(b);return (i<0?99:i)-(j<0?99:j)});
  cats.forEach(function(c,i){CAT['c'+i]=[c,CATCOL[c]||SPARE[(i-known.length+SPARE.length)%SPARE.length]]});
  function key(c){return 'c'+cats.indexOf(c)}
+ // single skills (dataset.json: hand-minutes per skill per task); without them the charts fall back to categories
+ var SKL=(D.skills||[]).filter(function(k){return D.tasks.some(function(t){return t.skills&&t.skills[k]>0})});
+ if(SKL.length){CAT={};SKL.forEach(function(k,i){CAT['s'+i]=[k,SKILLCOL[k]||SPARE[i%SPARE.length]]})}
+ function skey(k){return 's'+SKL.indexOf(k)}
  var tasks=D.tasks.slice().sort(function(a,b){return cats.indexOf(a.category)-cats.indexOf(b.category)||(a.recorded[0]<b.recorded[0]?-1:1)});
  function nm(t){return t.name||t.motion+(t.object?' / '+t.object:'')}
- var TASKS=tasks.map(function(t){return [nm(t),key(t.category),t.episodes,t.minutes,t.folder]});
+ var TASKS=tasks.map(function(t){return [nm(t),key(t.category),t.episodes,t.minutes,t.folder,t.skills||{}]});
  var S=tasks.map(function(t){return [key(t.category),nm(t),t.recorded.map(short).join(', '),t.episodes]});
  var all=[];tasks.forEach(function(t){all=all.concat(t.recorded)});all.sort();
  // stat cards and caption
@@ -757,22 +762,27 @@ function draw(D){
  set('ds-tasks',D.planned_tasks);set('ds-tasks-l','Manipulation Tasks');set('ds-tact',D.tactile_modalities);
  if(all.length)set('ds-span',long(all[0])+' to '+long(all[all.length-1])+', '+all[all.length-1].slice(0,4));
  ['ds-pie','ds-min'].forEach(function(id){document.getElementById(id).innerHTML=''});document.getElementById('ds-pie-legend').innerHTML='';
- (function(){var svg=document.getElementById('ds-pie'),tot=0,by={};TASKS.forEach(function(t){by[t[1]]=(by[t[1]]||0)+t[3];tot+=t[3]});
+ (function(){var svg=document.getElementById('ds-pie'),tot=0,by={};TASKS.forEach(function(t){if(SKL.length){for(var k in t[5]){by[skey(k)]=(by[skey(k)]||0)+t[5][k];tot+=t[5][k]}}else{by[t[1]]=(by[t[1]]||0)+t[3];tot+=t[3]}});
   var a0=-Math.PI/2,i=0,leg=document.getElementById('ds-pie-legend');
   Object.keys(CAT).forEach(function(k){var v=by[k],a1=a0+2*Math.PI*v/tot,r=122,cx=130,cy=130,large=(a1-a0)>Math.PI?1:0;
    var g=el('g',{class:'slice','data-cat':k,style:'--d:'+(i*0.12)+'s'},svg);
    if(v>=tot-1e-9)el('circle',{cx:cx,cy:cy,r:r,fill:CAT[k][1],stroke:'#fff','stroke-width':2},g);
    else el('path',{d:'M'+cx+' '+cy+' L'+(cx+r*Math.cos(a0))+' '+(cy+r*Math.sin(a0))+' A'+r+' '+r+' 0 '+large+' 1 '+(cx+r*Math.cos(a1))+' '+(cy+r*Math.sin(a1))+' Z',fill:CAT[k][1],stroke:'#fff','stroke-width':2},g);
    var am=(a0+a1)/2,rr=(v/tot<0.06)?r*1.14:r*.62;txt(g,cx+rr*Math.cos(am),cy+rr*Math.sin(am),(100*v/tot).toFixed(1)+'%',{'text-anchor':'middle','dominant-baseline':'central','font-size':13,'font-weight':700,fill:'#1a1714'});
-   tip(g,CAT[k][0]+': '+v.toFixed(1)+' min ('+(100*v/tot).toFixed(1)+'%)');
+   tip(g,CAT[k][0]+': '+v.toFixed(1)+' min'+(SKL.length?' of hand time':'')+' ('+(100*v/tot).toFixed(1)+'%)');
    var d=document.createElement('div');d.dataset.cat=k;d.innerHTML='<i style="background:'+CAT[k][1]+'"></i>'+CAT[k][0];leg.appendChild(d);a0=a1;i++});})();
  (function(){var svg=document.getElementById('ds-min'),L=44,B=200,W=460,H=180,mx=nice(Math.max.apply(null,TASKS.map(function(t){return t[3]}))),st=mx/4;
   for(var v=0;v<=mx+1e-9;v+=st){var y=B-H*v/mx;el('line',{x1:L,x2:L+W,y1:y,y2:y,stroke:'#1a171418'},svg);txt(svg,L-6,y+4,+v.toFixed(0),{'text-anchor':'end','font-size':11,fill:'#1a171499'})}
   txt(svg,12,B-H/2,'Minutes',{transform:'rotate(-90 12 '+(B-H/2)+')','text-anchor':'middle','font-size':12,fill:'#1a171499'});
   // the episode count is the same for every task, so the title states it once; the bars are recording time
   var ne=TASKS.map(function(t){return t[2]});txt(svg,L,12,'Recording time per task'+(ne.every(function(v){return v===ne[0]})?', '+ne[0]+' episodes each':''),{'font-size':13,'font-weight':600});
-  var bw=Math.min(W/TASKS.length,90),x0=L+(W-bw*TASKS.length)/2;TASKS.forEach(function(t,i){var h=H*t[3]/mx,x=x0+i*bw+5,g=el('g',{'data-cat':t[1],'data-task':t[4]},svg);
-   el('rect',{x:x,y:B-h,width:bw-10,height:h,rx:3,fill:CAT[t[1]][1],class:'grow',style:'--d:'+(i*0.06)+'s'},g);
+  var bw=Math.min(W/TASKS.length,90),x0=L+(W-bw*TASKS.length)/2;TASKS.forEach(function(t,i){var h=H*t[3]/mx,x=x0+i*bw+5,g=el('g',SKL.length?{'data-task':t[4]}:{'data-cat':t[1],'data-task':t[4]},svg);
+   if(SKL.length){var sum=0,yb=B;for(var k in t[5])sum+=t[5][k];
+    // the bar is the task's recording time, split by the share of each skill in its hand time
+    SKL.forEach(function(k){var v=t[5][k]||0;if(!v)return;var hh=h*v/sum;
+     var r=el('rect',{x:x,y:yb-hh,width:bw-10,height:hh,fill:CAT[skey(k)][1],stroke:'#fff','stroke-width':.6,class:'grow','data-cat':skey(k),style:'--d:'+(i*0.06)+'s'},g);
+     tip(r,t[0]+', '+k+': '+(100*v/sum).toFixed(0)+'% of hand time');yb-=hh})}
+   else el('rect',{x:x,y:B-h,width:bw-10,height:h,rx:3,fill:CAT[t[1]][1],class:'grow',style:'--d:'+(i*0.06)+'s'},g);
    txt(g,x+(bw-10)/2,B-h-5,t[3].toFixed(1),{'text-anchor':'middle','font-size':11,class:'fade',style:'--d:'+(0.6+i*0.06)+'s'});
    tip(g,t[0]+': '+t[3]+' min, '+t[2]+' training episodes');
    txt(g,x+(bw-10)/2,B+10,t[0],{transform:'rotate(-30 '+(x+(bw-10)/2)+' '+(B+10)+')','text-anchor':'end','font-size':11.5,'font-style':'italic'})});})();
@@ -832,7 +842,7 @@ function draw(D){
     var d=document.createElement('div');c.appendChild(d);g.appendChild(c);
     hand(d,t&&t.hands[sd],!t?'Coming soon':(sd==='left'?'Left':'Right')+' hand: not used in this task')})}
   function show(kind,key){if(!key)return;want=[kind,key];if(!FD){load();return}var id=kind+':'+key;if(id===cur)return;cur=id;
-   var folders=kind==='task'?[key]:tasks.filter(function(t){return t.category===key}).map(function(t){return t.folder});
+   var folders=kind==='task'?[key]:tasks.filter(function(t){return SKL.length?(t.skills&&t.skills[key]>0):t.category===key}).map(function(t){return t.folder});
    var have=folders.filter(function(f){return FD.tasks[f]}),eps=have.reduce(function(a,f){return a+FD.tasks[f].episodes},0);
    var first=FD.tasks[folders[0]],tk0=tasks.filter(function(x){return x.folder===folders[0]})[0];
    document.getElementById('fp-title').textContent='Fingertip force, '+(kind==='task'?(first?first.name:(tk0?nm(tk0):key)):key+(folders.length>1?', '+folders.length+' tasks':''));

@@ -3,6 +3,16 @@
  "split": "train",
  "planned_tasks": 12,
  "tactile_modalities": 3,
+ "skills": [
+  "Grasp",
+  "Lift",
+  "Weight sensing",
+  "Place",
+  "Insert",
+  "Hold",
+  "Handover",
+  "Pull"
+ ],
  "episodes": 800,
  "hours": 4.1,
  "tasks": [
@@ -16,7 +26,12 @@
    "minutes": 18.0,
    "recorded": [
     "2026-10-09"
-   ]
+   ],
+   "skills": {
+    "Hold": 17.02,
+    "Pull": 12.65
+   },
+   "skill_force_fallback_hands": 0
   },
   {
    "folder": "handover_tissue_box_shelf_to_shelf",
@@ -28,7 +43,14 @@
    "minutes": 31.8,
    "recorded": [
     "2026-10-07"
-   ]
+   ],
+   "skills": {
+    "Grasp": 6.04,
+    "Lift": 9.6,
+    "Place": 10.26,
+    "Handover": 24.64
+   },
+   "skill_force_fallback_hands": 18
   },
   {
    "folder": "pick_bag_place_box",
@@ -41,7 +63,13 @@
    "recorded": [
     "2026-10-18",
     "2026-10-19"
-   ]
+   ],
+   "skills": {
+    "Grasp": 28.26,
+    "Lift": 11.01,
+    "Place": 35.41
+   },
+   "skill_force_fallback_hands": 1
   },
   {
    "folder": "pick_cup_full_empty",
@@ -53,7 +81,12 @@
    "minutes": 21.7,
    "recorded": [
     "2026-10-14"
-   ]
+   ],
+   "skills": {
+    "Grasp": 9.0,
+    "Weight sensing": 11.11
+   },
+   "skill_force_fallback_hands": 50
   },
   {
    "folder": "put_mug_in_backpack",
@@ -66,7 +99,14 @@
    "recorded": [
     "2026-10-06",
     "2026-10-14"
-   ]
+   ],
+   "skills": {
+    "Grasp": 8.57,
+    "Lift": 3.49,
+    "Insert": 8.16,
+    "Hold": 28.33
+   },
+   "skill_force_fallback_hands": 0
   },
   {
    "folder": "sort_toy_by_weight",
@@ -83,7 +123,13 @@
     "2026-10-28",
     "2026-10-29",
     "2026-10-30"
-   ]
+   ],
+   "skills": {
+    "Grasp": 45.11,
+    "Weight sensing": 14.25,
+    "Place": 65.88
+   },
+   "skill_force_fallback_hands": 3
   },
   {
    "folder": "toy_shelf",
@@ -95,7 +141,13 @@
    "minutes": 30.4,
    "recorded": [
     "2026-09-28"
-   ]
+   ],
+   "skills": {
+    "Grasp": 9.28,
+    "Lift": 1.18,
+    "Place": 18.61
+   },
+   "skill_force_fallback_hands": 0
   }
  ]
 }

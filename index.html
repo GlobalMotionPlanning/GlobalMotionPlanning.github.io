@@ -794,7 +794,9 @@ function draw(D){
     Data: project_page/data/forces.json, built from the released .h5 files (median, middle half and every
     episode's trace per finger, aligned on the hand's grasp start); fetched when the section comes near. */
  (function(){var box=document.getElementById('ds-force');if(!box)return;
-  var FC=['#2a4fa8','#c97b63','#6f9e8a','#c98a2b','#b48ead'],FD=null,cur=null,want=['task',tasks[0]&&tasks[0].folder];
+  // task shown before any hover: Pull a tissue, where both hands touch the object; else the first task
+  var FIRST=tasks.filter(function(t){return t.folder==='extract_tissue'})[0]||tasks[0];
+  var FC=['#2a4fa8','#c97b63','#6f9e8a','#c98a2b','#b48ead'],FD=null,cur=null,want=['task',FIRST&&FIRST.folder];
   var FN=['Thumb','Index','Middle','Ring','Pinky'];
   document.getElementById('fp-legend').innerHTML=FN.map(function(f,i){return '<span><i style="background:'+FC[i]+'"></i>'+f+'</span>'}).join('')+
    '<span><i class="band"></i>middle half of episodes</span><span>bold line: median</span><span>faint lines: single episodes</span>';

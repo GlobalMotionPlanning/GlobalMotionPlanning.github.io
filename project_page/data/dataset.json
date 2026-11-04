@@ -13,8 +13,8 @@
   "Handover",
   "Pull"
  ],
- "episodes": 800,
- "hours": 4.1,
+ "episodes": 900,
+ "hours": 4.78,
  "tasks": [
   {
    "folder": "extract_tissue",
@@ -55,9 +55,9 @@
   {
    "folder": "pick_bag_place_box",
    "name": "Bag into box",
-   "motion": "Grasp, lift, insert",
+   "motion": "Grasp, lift, place",
    "object": "bag",
-   "category": "Grasp, lift & insert",
+   "category": "Grasp, lift & place",
    "episodes": 100,
    "minutes": 38.5,
    "recorded": [
@@ -89,11 +89,31 @@
    "skill_force_fallback_hands": 50
   },
   {
+   "folder": "plug_into_power_strip",
+   "name": "Plug into power strip",
+   "motion": "Hold, grasp, insert",
+   "object": "plug",
+   "category": "Insert",
+   "episodes": 100,
+   "minutes": 40.9,
+   "recorded": [
+    "2026-11-03",
+    "2026-11-04"
+   ],
+   "skills": {
+    "Grasp": 9.99,
+    "Lift": 4.55,
+    "Insert": 17.36,
+    "Hold": 39.84
+   },
+   "skill_force_fallback_hands": 1
+  },
+  {
    "folder": "put_mug_in_backpack",
    "name": "Mug into backpack",
-   "motion": "Grasp, lift, insert",
+   "motion": "Grasp, lift, place",
    "object": "mug",
-   "category": "Grasp, lift & insert",
+   "category": "Grasp, lift & place",
    "episodes": 100,
    "minutes": 29.5,
    "recorded": [
@@ -103,7 +123,7 @@
    "skills": {
     "Grasp": 8.57,
     "Lift": 3.49,
-    "Insert": 8.16,
+    "Place": 8.16,
     "Hold": 28.33
    },
    "skill_force_fallback_hands": 0
@@ -111,9 +131,9 @@
   {
    "folder": "sort_toy_by_weight",
    "name": "Toy by weight",
-   "motion": "Grasp, lift, insert",
+   "motion": "Grasp, lift, place",
    "object": "toy",
-   "category": "Grasp, lift & insert",
+   "category": "Grasp, lift & place",
    "episodes": 200,
    "minutes": 75.8,
    "recorded": [
@@ -134,9 +154,9 @@
   {
    "folder": "toy_shelf",
    "name": "Toy pick-and-place",
-   "motion": "Grasp, lift, insert",
+   "motion": "Grasp, lift, place",
    "object": "toy",
-   "category": "Grasp, lift & insert",
+   "category": "Grasp, lift & place",
    "episodes": 100,
    "minutes": 30.4,
    "recorded": [

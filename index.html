@@ -482,7 +482,7 @@ try{navigator.clipboard.writeText(t.textContent).then(done)}catch(e){const r=doc
 <script>
 (function(){const P=[...document.querySelectorAll('#tel-pills .pill')],V=document.getElementById('tel-video');
 P.forEach(b=>b.onclick=()=>{const k=b.dataset.k;P.forEach(x=>x.setAttribute('aria-pressed',x===b?'true':'false'));
-V.poster='project_page/posters/teleop_'+k+'.jpg';V.setAttribute('aria-label',(b.dataset.demo?'Teleoperated demonstration from the dataset':'GlobMP rollout')+': head camera, both wrist cameras, the ten fingertip pressure maps, and the fingertip force of each hand over time');V.src='project_page/videos/teleop_'+k+'.mp4';const q=V.play();if(q&&q.catch)q.catch(()=>{});});})();
+V.poster='project_page/posters/teleop_'+k+'.jpg';V.setAttribute('aria-label',(b.dataset.demo?'Episode from the dataset':'GlobMP rollout')+': head camera, both wrist cameras, the ten fingertip pressure maps, and the fingertip force of each hand over time');V.src='project_page/videos/teleop_'+k+'.mp4';const q=V.play();if(q&&q.catch)q.catch(()=>{});});})();
 </script>
 <script>
 (function(){var io=null;
